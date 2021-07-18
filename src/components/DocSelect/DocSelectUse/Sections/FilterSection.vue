@@ -12,6 +12,8 @@
                     :rules="[ageRule]"
                     :clearable="true"
                     @change="setFilter($event, 'age')"
+                    placeholder="Любой"
+                    :persistent-placeholder="true"
             ></v-text-field>
         </v-col>
         <v-col cols="12"
@@ -29,6 +31,8 @@
                     @change="setFilter($event, group.name)"
                     :clearable="true"
                     @click:clear="setFilter($event, group.name)"
+                    :placeholder="group.placeholder"
+                    :persistent-placeholder="true"
             ></v-select>
             <v-autocomplete
                     v-else-if="group.type*1 == 4"

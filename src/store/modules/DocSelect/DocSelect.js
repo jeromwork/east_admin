@@ -61,7 +61,7 @@ export default {
     async GET_FILTERED_DOCTORS({getters}){
       let qdata = {
         action:  'doctors/get',
-        cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
+        jwt:  localStorage.getItem('jwt'),
         filterTags:getters.getFilter,
         };
 
