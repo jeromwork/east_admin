@@ -51,6 +51,7 @@ export default {
     //если присылаются данные, ставим пометку, что юзер авторизован
     //console.log('created');
     this.$store.dispatch('Login/getUserData');
+      this.$store.dispatch('Access/getAccessData');
   },
   data: () => ({
     drawer: false,

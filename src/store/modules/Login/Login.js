@@ -1,4 +1,3 @@
-import axios from 'axios'
 import router from '@/router'
 
 export default {
@@ -50,17 +49,16 @@ export default {
             //console.log(loginData);
             let qdata = {
                 action:  'login/login',
-                cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
                 username : loginData.login,
-
+                component:'login',
                 //'username': 'Ivanov_callcenter',
                 password: loginData.password,
                 'rememberme': 1,
                 'login_context': 'web',
                 //'jwt': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCIsImlhdCI6MTYyNDI4MDEyNCwiZXhwIjoxNjI0MjgzNzI0LCJhdWQiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCJ9.Vj98Suqo18jw7IOlEzITMOQ1x39WL9_53UrCgTDlROw5bF2IwNEjmK0d_Fyu1JCgEgKTs4qFpUepA8kpxeQD3g',
             };
-            axios
-                .post(state.iservices_connector_url, qdata)
+            this.$http
+                .post('remote/connector.php', qdata)
                 .then(response => {this.info = response
 
                     //console.log(response.data);
@@ -81,21 +79,20 @@ export default {
                     //
                 }).catch(error => console.log(error+'error'));
         },
-        async getUserData({state}){
+        async getUserData(){
 
             let qdata = {
                 action:  'login/get_user_data',
-                cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
+                component:'login',
                 //'username': 'Ivanov_callcenter',
                 //'password': 'WPjsnaRB',
                 //'rememberme': 1,
                 //'login_context': 'web',
-                'jwt':  localStorage.getItem('jwt'),
+                //'jwt':  localStorage.getItem('jwt'),
             };
-            // console.log(qdata);
             // console.log(state);
-            axios
-                .post(state.iservices_connector_url, qdata)
+            this.$http
+                .post('remote/connector.php', qdata)
                 .then(response => {this.info = response
 
                     //console.log(response.data);

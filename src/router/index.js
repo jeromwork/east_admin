@@ -13,7 +13,6 @@ import store from '@/store'
 
 Vue.use(VueRouter)
 
-const isAuthenticated = () => {  return !store.getters["Login/isAnonim"];};
 
 
 
@@ -60,12 +59,18 @@ const router = new VueRouter({
             },
         },
     ],
-})
+});
+
+
+const isAuthenticated = () => {  return !store.getters["Login/isAnonim"];};
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some((route) => route.meta?.requiresAuth)) {
 
         if (isAuthenticated()) {
+            //здесь же проверка на доступ к компоненту
+            console.log(store.getters["Login/currentUserGroup"])
+
             next();
         } else {
             next("/");
