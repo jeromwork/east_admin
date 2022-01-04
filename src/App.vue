@@ -52,6 +52,7 @@ export default {
     //console.log('created');
     this.$store.dispatch('Login/getUserData');
       this.$store.dispatch('Access/getAccessData');
+      this.$store.dispatch('Access/initWebSocket');
   },
   data: () => ({
     drawer: false,

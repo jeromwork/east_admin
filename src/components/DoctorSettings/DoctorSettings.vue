@@ -31,7 +31,7 @@
                                         class="pa-2"
                                         v-model="doctorSettings.doc__name"
                                         label="Имя"
-                                        @change="getDoctorData"
+                                        @change="setToAccess"
                                 ></v-text-field>
                             </v-col>
                         </v-row>
@@ -338,9 +338,14 @@
 
         methods: {
             getDoctorData () {
+
                 //получить данные текущего доктора
                 //id доктора уже передано в store
                 this.$store.dispatch('doctorSettings/GET_DOCTOR_SETTINGS_AJAX');
+            },
+            setToAccess(){
+                //console.log(this.doctorSettings)
+                this.$store.dispatch('Access/sendToSocket', this.doctorSettings.doc__name);
             },
             setWs () {
                 //получить данные текущего доктора
