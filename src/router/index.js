@@ -9,8 +9,6 @@ import FilialSettings from '@/components/FilialSettings/FilialSettings'
 import store from '@/store'
 
 
-
-
 Vue.use(VueRouter)
 
 

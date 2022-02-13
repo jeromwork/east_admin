@@ -32,8 +32,6 @@
 </template>
 
 <script>
-  //import DoctorSettings from './components/DoctorSettings/DoctorSettings'
-  //import Login from './components/Login/Login'
   import LoginBar from './components/Login/LoginBar'
   import Menu from "./components/Menu/Menu";
 export default {

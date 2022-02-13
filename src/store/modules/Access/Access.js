@@ -38,8 +38,11 @@ const Access = {
     },
 //=============================================================
     actions:{
-        async getAccessData(){
-            console.log(222)
+        async getAccessData({getters, state}){
+            console.log(state)
+            console.log(getters)
+
+
             this.$http
                 .post('remote/connector.php', { action:  'getAccessRules', component:'Access'  })
                 .then(response => {this.info = response
