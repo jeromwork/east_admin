@@ -1,22 +1,27 @@
 <template>
+  <div >
     <v-data-table
-            dense
-            :headers="dataTableProps.headers"
-            :items="dataTableProps.desserts"
-            item-key="name"
-            :class="dataTableProps.name"
+      dense
+      :headers="headers"
+      :items="items"
+      item-key="name"
     ></v-data-table>
+  </div>
+
 </template>
 
 <script>
     export default {
         name: "ETable",
         props: {
-            dataTableProps:{
-                headers:Array,
-            },
+          headers:{
+            type: Array,
+          },
+          items:Array,
+          settings:Object,
+
         },
-        data: () => ({
+        data: function () {return {
             desserts: [
                 {
                     name: 'Frozen Yogurt',
@@ -99,7 +104,18 @@
                     iron: '6%',
                 },
             ],
-        }),
+            headers2: [
+              { text: 'Dessert (100g serving)', align: 'start', sortable: false, value: 'name', },
+              { text: 'Calories', value: 'calories' },
+              { text: 'Fat (g)', value: 'fat' },
+              { text: 'Carbs (g)', value: 'carbs' },
+              { text: 'Protein (g)', value: 'protein' },
+              { text: 'Iron (%)', value: 'iron' },
+            ],
+        };},
+      created() {
+
+      }
     }
 </script>
 

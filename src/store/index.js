@@ -8,8 +8,10 @@ import FilialSettings from './modules/FilialSettings/FilialSettings'
 import DocSelect from './modules/DocSelect/DocSelect'
 import Menu from './modules/Menu/Menu'
 import JWT from './modules/JWT/JWT'
+import HealthSettings from "./modules/HealthSettings/HealthSettings";
 import Access from './modules/Access/Access'
 //import AccessSocketPlugin from "./plugins/webSockets/Access";
+
 
 Vue.use(Vuex)
 
@@ -23,6 +25,7 @@ export default new Vuex.Store({
       JWT,
       Menu,
       DocSelect,
+      HealthSettings,
       Access,
   },
     //plugins:[APlugin]

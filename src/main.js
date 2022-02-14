@@ -20,6 +20,7 @@ if (localStorage.getItem('jwt')) {
 }
 $axios.defaults.baseURL =  (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/': 'http://dev.eastclinic.local/assets/components/eastclinic/';
 $axios.defaults.method ="POST";
+$axios.CONNECTOR_URL = 'remote/connector.php';
 
 store.$http = $axios;
 
