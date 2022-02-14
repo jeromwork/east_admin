@@ -24,6 +24,16 @@
                                 ></v-select>
 
                             </v-col>
+                            <v-col cols="12"
+                                   sm="12"
+                                   md="4">
+                                <v-text-field
+                                        class="pa-2"
+                                        v-model="doctorSettings.doc__name"
+                                        label="Имя"
+                                        @change="setToAccess"
+                                ></v-text-field>
+                            </v-col>
                         </v-row>
                     </v-form>
                 </v-card-text>
@@ -328,6 +338,16 @@
 
         methods: {
             getDoctorData () {
+
+                //получить данные текущего доктора
+                //id доктора уже передано в store
+                this.$store.dispatch('doctorSettings/GET_DOCTOR_SETTINGS_AJAX');
+            },
+            setToAccess(){
+                //console.log(this.doctorSettings)
+                this.$store.dispatch('Access/sendToSocket', this.doctorSettings.doc__name);
+            },
+            setWs () {
                 //получить данные текущего доктора
                 //id доктора уже передано в store
                 this.$store.dispatch('doctorSettings/GET_DOCTOR_SETTINGS_AJAX');
@@ -370,7 +390,7 @@
         created(){
             //console.log('created');
             this.$store.dispatch('doctorSettings/GET_DOCTORS_AJAX', {limit:10});
-
+            this.$store.dispatch('doctorSettings/WS_INIT', );
         },
 
         computed:{

@@ -134,22 +134,16 @@ export default {
             //this.commit('doctorSettings/FILL_DOCTOR_SETTINGS_DATA', response.data);
           });
     },
+    async WS({state}, data){
 
+      state.doctorSettings.ws.send(JSON.stringify(data));
 
+    },
 
+    async WS_INIT({ state }){
+      state.doctorSettings.ws = new WebSocket('ws://127.0.0.1:61523');
+    },
 
-    async getDoctorsAjax2(){
-      const res = await fetch('https://gorest.co.in/public-api/users');
-      //console.log(res);
-      const initialData = await res.json();
-
-
-      this.commit('doctorSettings/initialData', initialData);
-
-
-      //this.commit('Shops/initialData', initialData);
-//ctx.commit('setPF', JSON.parse(prods));
-    }
   },
   state: {
     iservices_connector_url:(window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/eastdoc/connector.php': 'http://dev.eastclinic.local/assets/components/eastclinic/eastdoc/connector.php',
@@ -157,6 +151,7 @@ export default {
     doctors:[
       {id:0, name:'Выберите доктора'}
     ],
+    ws:{},
     currentDoctorId:1,
     arrChildAge:[
       {value:'-1', text:'Не работает с детьми'},

@@ -32,8 +32,6 @@
 </template>
 
 <script>
-  //import DoctorSettings from './components/DoctorSettings/DoctorSettings'
-  //import Login from './components/Login/Login'
   import LoginBar from './components/Login/LoginBar'
   import Menu from "./components/Menu/Menu";
 export default {
@@ -51,6 +49,8 @@ export default {
     //если присылаются данные, ставим пометку, что юзер авторизован
     //console.log('created');
     this.$store.dispatch('Login/getUserData');
+      this.$store.dispatch('Access/getAccessData');
+      this.$store.dispatch('Access/initWebSocket');
   },
   data: () => ({
     drawer: false,
