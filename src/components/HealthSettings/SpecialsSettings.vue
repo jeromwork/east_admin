@@ -1,9 +1,10 @@
 <template>
     <div>
         <e-table :headers="getTableHeadItems"
-                :items="getSpecials"
+                :items="specials"
                  @pagination ="pagination"
                  :total="getTotalCountItems"
+                 @update:items-per-page="setItemsPerPage"
         ></e-table>
     </div>
 </template>
@@ -34,22 +35,34 @@
         },
         methods: {
             pagination(pagination){
-                //console.log(this.doctorSettings)
-                console.log(2222)
-                console.log(pagination)
+                if(pagination.pageStart){
+                    this.$store.commit('SpecialsSettings/SET_OFFSET', pagination.pageStart);
+                }
+                this.getSpecials();
             },
+
+            setItemsPerPage(count){
+                this.$store.commit('SpecialsSettings/SET_COUNT_OF_PAGE', count);
+                this.getSpecials();
+            },
+
+            getSpecials(){
+                this.$store.dispatch('SpecialsSettings/GET_SPECIALS');
+            },
+
+
 
         },
 
         created(){
 
-            this.$store.dispatch('SpecialsSettings/GET_SPECIALS');
+            //this.getSpecials();
 
         },
         computed:{
 
 
-            getSpecials:{
+            specials:{
                 get(){        //console.log(this);
                     //return this.currentDoctorId;
                     return this.$store.getters["SpecialsSettings/getSpecials"];

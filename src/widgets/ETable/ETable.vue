@@ -7,6 +7,7 @@
       item-key="name"
       @pagination ="pagination"
       :server-items-length="total"
+      @update:items-per-page="setItemsPerPage"
     ></v-data-table>
   </div>
 
@@ -34,6 +35,9 @@
       methods: {
         pagination(pagination){
           this.$emit('pagination', pagination)
+        },
+        setItemsPerPage(data){
+          this.$emit('update:items-per-page', data)
         },
       },
 

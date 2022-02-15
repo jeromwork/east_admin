@@ -11,7 +11,10 @@ export default {
         component:'health', //компонент на сервере
         specials:[],
         limit: 10,
+        offset:0,
         count:10,
+        page:1,
+        countOfPage:10,
     },
     mutations:{
         FILL_SPECIALS(state, specials){
@@ -25,15 +28,24 @@ export default {
             state.count = count;
 
         },
+        SET_PAGINATION_PAGE(state, page){
+            state.page = page;
+        },
+        SET_OFFSET(state, offset){
+            state.offset = offset;
+        },
+        SET_COUNT_OF_PAGE(state, count){
+            state.limit = count;
+        },
     },
     actions:{
         async GET_SPECIALS({state}){
-
 
             let requestData = {
                 action:  'specials/getVue',
                 component:state.component,
                 limit:state.limit,
+                offset:state.offset,
             };
 
 
