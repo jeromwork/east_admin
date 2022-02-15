@@ -6,7 +6,7 @@ import DoctorSettings from '@/components/DoctorSettings/DoctorSettings'
 import DocSelectSettings from '@/components/DocSelect/DocSelectSettings/DocSelectSettings'
 import DocSelect from '@/components/DocSelect/DocSelectUse/DocSelect'
 import FilialSettings from '@/components/FilialSettings/FilialSettings'
-import HealthSettings from "../components/Health/HealthSettings";
+import HealthSettings from "../components/HealthSettings/HealthSettings";
 import store from '@/store'
 
 

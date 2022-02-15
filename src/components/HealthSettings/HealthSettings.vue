@@ -1,8 +1,8 @@
 <template>
     <v-row>
-        <v-col cols="6"
-               sm="6"
-               md="6">
+        <v-col cols="12"
+               sm="12"
+               md="12">
 
 
             <v-card
@@ -11,11 +11,10 @@
             >
 
                 <v-card-text>
+                    <SpecialsSettings>
 
-                    <ETable :headers="headers"
-                            :items="getHealthData('specials')"
+                    </SpecialsSettings>
 
-                    ></ETable>
                 </v-card-text>
             </v-card>
 
@@ -40,30 +39,22 @@
 
 
 
-    import ETable from "../../widgets/ETable/ETable";
+    import SpecialsSettings from "./SpecialsSettings";
+
     import {mapGetters} from "vuex";
     export default {
 
 
-        name: 'FilialsSettings',
+        name: 'HealthSettings',
 
         props: {
 
         },
         components: {
-          ETable,
+            SpecialsSettings,
 
         },
         data: () => ({
-          headers: [
-            { text: 'Dessert (100g serving)', align: 'start', sortable: false, value: 'name', },
-            { text: 'Calories', value: 'calories' },
-            { text: 'Fat (g)', value: 'fat' },
-            { text: 'Carbs (g)', value: 'carbs' },
-            { text: 'Protein (g)', value: 'protein' },
-            { text: 'Iron (%)', value: 'iron' },
-          ],
-          eTableSettings:{     },
             valid2: true,
             valid: true,
 
@@ -75,6 +66,7 @@
                 'Item 4',
             ],
             checkbox: false,
+            countItems : 10,
         }),
 
         methods: {
@@ -82,46 +74,10 @@
             getHealthDataItems:'HealthSettings/getHealthDataItems'
           }),
 
-          getHealthData(type){
-            if(!type){
-              return [];
-            }
-            return this.getHealthDataItems(type);
 
-
-              //
-              //
-              // return [];
-              // if(type){
-              //   let items = this.$store.dispatch('HealthSettings/GET_ITEMS', {type:type, limit:10});
-              //   if(items ){
-              //     return items;
-              //   }else {
-              //     return [];
-              //   }
-              //
-              //
-              // }else {
-              //   return [];
-              // }
-
-
-              // return [
-              //         {
-              //             name: 'Frozen Yogurt',
-              //             calories: 159,
-              //             fat: 6.0,
-              //             carbs: 24,
-              //             protein: 4.0,
-              //             iron: '1%',
-              //         },
-              //
-              //     ];
-            },
         },
         created(){
-            //console.log('created');
-          this.$store.dispatch('HealthSettings/GET_ITEMS', {type:'specials', limit:10});
+
         },
 
         computed:{
