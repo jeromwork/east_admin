@@ -1,5 +1,6 @@
 <template>
   <div >
+
     <v-data-table
       dense
       :headers="headers"
@@ -8,7 +9,11 @@
       @pagination ="pagination"
       :server-items-length="total"
       @update:items-per-page="setItemsPerPage"
-    ></v-data-table>
+    >
+      <slot name="item.iid='{ item }'"></slot>
+
+    </v-data-table>
+
   </div>
 
 </template>
@@ -23,7 +28,7 @@
           items:Array,
           settings:Object,
           total:Number,
-
+          handlers:Object,
         },
         data: function () {return {
 

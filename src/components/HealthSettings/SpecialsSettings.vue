@@ -1,55 +1,69 @@
 <template>
     <div>
-        <e-table :headers="getTableHeadItems"
-                :items="specials"
-                 @pagination ="pagination"
-                 :total="getTotalCountItems"
-                 @update:items-per-page="setItemsPerPage"
-        ></e-table>
+
+      <v-data-table
+        dense
+        :headers="getTableHeadItems"
+        :items="specials"
+        item-key="id"
+        :server-items-length="getTotalCountItems"
+        @update:options="setOptions"
+        :multi-sort="true"
+        :fixed-header="true"
+      >
+        <template v-slot:item.off="{ item }">
+          <e-checkbox
+            :item="item"
+            field="off"
+            :saveSettings="saveSettings"
+          >
+
+          </e-checkbox>
+        </template>
+      </v-data-table>
     </div>
 </template>
 
 
 <script>
-    import ETable from "../../widgets/ETable/ETable";
+    // import ETable from "../../widgets/ETable/ETable";
     //import {mapGetters} from "vuex";
+    import ECheckbox from "../../widgets/ECheckbox/ECheckbox";
 
     export default {
         name: "SpecialsSettings",
-        //
-        data: () => ({
-            totalDesserts : 100,
-            headers: [
-                { text: 'Dessert (100g serving)', align: 'start', sortable: false, value: 'name', },
-                { text: 'Calories', value: 'calories' },
-                { text: 'Fat (g)', value: 'fat' },
-                { text: 'Carbs (g)', value: 'carbs' },
 
-            ],
-            limit:10,
-            eTableSettings:{     },
+        data: () => ({
+          saveSettings:{
+            component : 'health',
+            item: 'specials'
+          }
         }),
         components: {
-            'e-table' : ETable,
-
+            // 'e-table' : ETable,
+          'e-checkbox' : ECheckbox,
         },
         methods: {
-            pagination(pagination){
-                if(pagination.pageStart){
-                    this.$store.commit('SpecialsSettings/SET_OFFSET', pagination.pageStart);
-                }
-                this.getSpecials();
-            },
 
-            setItemsPerPage(count){
-                this.$store.commit('SpecialsSettings/SET_COUNT_OF_PAGE', count);
-                this.getSpecials();
-            },
+          changeCheckbox(c, data, name ){
+            console.log(data)
+            console.log(c)
+            console.log(name)
 
+          },
             getSpecials(){
                 this.$store.dispatch('SpecialsSettings/GET_SPECIALS');
             },
+            setOptions(options){
+              this.$store.commit('SpecialsSettings/SET_OPTIONS', options);
+              this.getSpecials();
+            },
 
+          getColor (calories) {
+            if (calories > 10001594) return 'red'
+            else if (calories > 10001594) return 'orange'
+            else return 'green'
+          },
 
 
         },
@@ -68,6 +82,7 @@
                     return this.$store.getters["SpecialsSettings/getSpecials"];
                     //return this.getStoreSpecials();
                 },
+
             },
             getTableHeadItems:{
                 get(){        //console.log(this);
