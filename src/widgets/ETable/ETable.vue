@@ -10,7 +10,19 @@
       :server-items-length="total"
       @update:items-per-page="setItemsPerPage"
     >
-      <slot name="item.iid='{ item }'"></slot>
+      <template
+              v-for="header in getTableHeadItemsRenderCheckbox"
+              v-slot:[`item.${header.value}`]="{ item }"
+      >
+        <e-checkbox
+                :key="header.value"
+                :item="item"
+                :field="header.value"
+                :saveSettings="saveSettings"
+        >
+
+        </e-checkbox>
+      </template>
 
     </v-data-table>
 
@@ -19,11 +31,20 @@
 </template>
 
 <script>
+    import ECheckbox from "../ECheckbox/ECheckbox";
+
     export default {
+      components: {
+        'e-checkbox' : ECheckbox,
+      },
         name: "ETable",
         props: {
           headers:{
             type: Array,
+          },
+          saveSettings:{
+            component : String,
+            item: String,
           },
           items:Array,
           settings:Object,
@@ -43,6 +64,19 @@
         },
         setItemsPerPage(data){
           this.$emit('update:items-per-page', data)
+        },
+
+
+      },
+      computed:{
+        getTableHeadItemsRenderCheckbox:{
+          get(){
+            console.log(this.headers)
+            let headers = this._.filter(this.headers, function(h) {
+              return h.renderCheckbox; });
+            console.log(headers)
+            return headers;
+          },
         },
       },
 

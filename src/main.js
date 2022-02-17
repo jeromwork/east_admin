@@ -5,6 +5,8 @@ import vuetify from './plugins/vuetify' // path to vuetify export
 //import VueRouter from 'vue-router'
 import router from './router'
 import Axios from 'axios'
+import _ from 'lodash';
+Object.defineProperty(Vue.prototype, '_', { value: _ });
 
 
 Vue.config.productionTip = false

@@ -1,6 +1,14 @@
 <template>
     <div>
 
+       <e-table
+               :headers="getTableHeadItems"
+               :items="specials"
+               :server-items-length="getTotalCountItems"
+               :table-options="eTableSettings"
+
+       ></e-table>
+
       <v-data-table
         dense
         :headers="getTableHeadItems"
@@ -11,24 +19,18 @@
         :multi-sort="true"
         :fixed-header="true"
       >
-        <template v-slot:item.off="{ item }">
-          <e-checkbox
-            :item="item"
-            field="off"
-            :saveSettings="saveSettings"
-          >
 
-          </e-checkbox>
-        </template>
+
       </v-data-table>
+
     </div>
 </template>
 
 
 <script>
-    // import ETable from "../../widgets/ETable/ETable";
+     import ETable from "../../widgets/ETable/ETable";
     //import {mapGetters} from "vuex";
-    import ECheckbox from "../../widgets/ECheckbox/ECheckbox";
+    //import ECheckbox from "../../widgets/ECheckbox/ECheckbox";
 
     export default {
         name: "SpecialsSettings",
@@ -37,11 +39,17 @@
           saveSettings:{
             component : 'health',
             item: 'specials'
-          }
+          },
+            eTableSettings:{
+              component:'health',
+                items:'specials',
+                action:'getVue'
+            },
+            sl:true,
         }),
         components: {
-            // 'e-table' : ETable,
-          'e-checkbox' : ECheckbox,
+             'e-table' : ETable,
+          //'e-checkbox' : ECheckbox,
         },
         methods: {
 
