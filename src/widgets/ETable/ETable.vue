@@ -3,12 +3,11 @@
 
     <v-data-table
       dense
-      :headers="headers"
+      :headers="getTableHeadItems"
       :items="items"
-      item-key="name"
-      @pagination ="pagination"
-      :server-items-length="total"
-      @update:items-per-page="setItemsPerPage"
+      item-key="id"
+      :server-items-length="getTotalCountItems"
+      @update:options="setOptions"
     >
       <template
               v-for="header in getTableHeadItemsRenderCheckbox"
@@ -32,6 +31,9 @@
 
 <script>
     import ECheckbox from "../ECheckbox/ECheckbox";
+    import store from '../../store'
+    import ETable from '../../store/modules/ETable/ETable'
+    //const {state:  stateModule,getters, mutations} = ETable
 
     export default {
       components: {
@@ -39,45 +41,80 @@
       },
         name: "ETable",
         props: {
-          headers:{
-            type: Array,
-          },
           saveSettings:{
             component : String,
             item: String,
           },
-          items:Array,
-          settings:Object,
-          total:Number,
-          handlers:Object,
+          options:{
+            items:String,
+            action:String,
+
+          },
         },
         data: function () {return {
-
+          storeName: '',
 
         };},
       created() {
-
+        console.log('created')
+        this.initStoreModule();
       },
       methods: {
-        pagination(pagination){
-          this.$emit('pagination', pagination)
+
+        initStoreModule(){
+          //при запуске компонента, создается новый vuex модуль, с уникальным именем
+          //соответственно мутации и комиты будут через это уникальное имя модуля
+          this.storeName = `ETable_${this.options.items}`;
+          store.registerModule(this.storeName, {
+            ...ETable,
+            component:'specials',
+            namespaced: true,
+          });
+          this.$store.commit(this.storeName + '/SET_ETABLE_OPTIONS', {
+            itemsName:this.options.items,
+            id:this.storeName,
+            action:this.options.action,
+            component:this.options.component,
+          });
+
         },
-        setItemsPerPage(data){
-          this.$emit('update:items-per-page', data)
+        getItems(){
+          this.$store.dispatch(this.storeName + '/GET_ITEMS');
+        },
+        setOptions(options){
+          this.$store.commit(this.storeName + '/SET_OPTIONS', options);
+          this.getItems();
         },
 
 
       },
       computed:{
+        items:{
+          get(){
+            return this.$store.getters[this.storeName + "/getItems"];
+          },
+        },
+        getTableHeadItems:{
+          get(){
+            return this.$store.getters[this.storeName + "/getTableHeadItems"];
+          },
+        },
         getTableHeadItemsRenderCheckbox:{
           get(){
-            console.log(this.headers)
-            let headers = this._.filter(this.headers, function(h) {
+            let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.renderCheckbox; });
-            console.log(headers)
             return headers;
           },
         },
+        getTotalCountItems:{
+          get(){
+            return this.$store.getters[this.storeName + "/getTotalCountItems"];
+          },
+        },
+
+
+
+
       },
 
 

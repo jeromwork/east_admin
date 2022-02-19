@@ -2,14 +2,18 @@
 //для получения хедеров, нужно выбрать только разрешенные поля из acess
 //так же еще будут настройки какие поля отображать (потом можно будет вынести эти настройки в одтельный компонент)
 //items нужно получать с сервера
-import AccessMap from './acess/healthSpecialsETable'
+//import AccessMap from './acess/healthSpecialsETable'
+
+import AccessMap from "../HealthSettings/acess/healthSpecialsETable";
 
 export default {
     namespaced:true,
 
     state: {
-        component:'health', //компонент на сервере
-        specials:[],
+        component:'', //компонент на сервере
+        id:'',
+        itemsName:'',
+        Items:[],
         limit: 10,
         offset:0,
         count:10,
@@ -18,36 +22,36 @@ export default {
         requestOptions:{page:1, itemsPerPage:10},
     },
     mutations:{
-        FILL_SPECIALS(state, specials){
-            state.specials = specials;
-        },
-        SET_OPTIONS(state, options){
-          console.log(options)
-          state.requestOptions = options;
-        },
 
-        SET_TOTAL_COUNT_SPECIALS(state, count){
+        SET_OPTIONS(state, options){
+            state.requestOptions = options;
+        },
+        FILL_ITEMS(state, items){
+            state.Items = items;
+        },
+        SET_TOTAL_COUNT_ITEMS(state, count){
             state.count = count;
         },
-        SET_PAGINATION_PAGE(state, page){
-            state.page = page;
+        SET_ETABLE_OPTIONS(state, options){
+            if(!options.id || !options.component || !options.itemsName || !options.action){
+                throw new Error('Неправильный массив опций, для настройки модуля ETable.js', 16);
+            }
+            state.id = options.id;
+            state.component = options.component;
+            state.itemsName = options.itemsName;
+            state.action = options.action;
         },
-        SET_OFFSET(state, offset){
-            state.offset = offset;
-        },
-        SET_COUNT_OF_PAGE(state, count){
-            state.limit = count;
-        },
+
     },
     actions:{
-        async GET_SPECIALS({state}){
+        async GET_ITEMS({state}){
 
             let requestData = {
-                action:  'specials/getVue',
+                action:  state.itemsName + '/getVue',
                 component:state.component,
                 limit:state.requestOptions.itemsPerPage,
                 offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
-              requestOptions:state.requestOptions,
+                requestOptions:state.requestOptions,
             };
 
 
@@ -59,17 +63,17 @@ export default {
                         return;
                     }
 
-                    this.commit('SpecialsSettings/FILL_SPECIALS', response.data.items);
-                    this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
+                    this.commit(state.id + '/FILL_ITEMS', response.data.items);
+                    this.commit(state.id + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
                 });
         },
     },
     getters: {
-        getSpecials : state => {
-            return state.specials;
+        getItems : state => {
+            return state.Items;
         },
-
         getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
+            console.log(state)
             let headerItems = [];
             let accessItems = rootGetters['Access/access']('healthSpecialsSettings');
             if(accessItems && AccessMap && AccessMap['healthSpecialsSettings']){
@@ -87,10 +91,9 @@ export default {
             }
             return headerItems;
         },
-        getTotalCountSpecials :state => {
+        getTotalCountItems :state => {
             return state.count;
         }
-
     },
 
 
