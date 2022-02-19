@@ -40,6 +40,7 @@ export default {
             state.component = options.component;
             state.itemsName = options.itemsName;
             state.action = options.action;
+            console.log(state.id)
         },
 
     },
@@ -73,11 +74,12 @@ export default {
             return state.Items;
         },
         getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
-            console.log(state)
+
             let headerItems = [];
-            let accessItems = rootGetters['Access/access']('healthSpecialsSettings');
-            if(accessItems && AccessMap && AccessMap['healthSpecialsSettings']){
-                let healthSpecialsETable = AccessMap['healthSpecialsSettings'];
+            let accessItems = rootGetters['Access/access'](state.id);
+            console.log(accessItems)
+            if(accessItems && AccessMap && AccessMap[state.id]){
+                let healthSpecialsETable = AccessMap[state.id];
                 for (let id in healthSpecialsETable ){
                     if(accessItems[id] && healthSpecialsETable[id]['data']){
                         headerItems.push(healthSpecialsETable[id]['data'])

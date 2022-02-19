@@ -1,5 +1,5 @@
 export default  {
-  healthSpecialsSettings:{
+    ETable_specials:{
         id :{ data : { text: 'id', align: 'start', value: 'id', }},
         id2 : { data : { text: 'id', align: 'start', value: 'id', },},
         name : { data : {text: 'Название', value: 'name',},},
