@@ -17,7 +17,7 @@
                 :key="header.value"
                 :item="item"
                 :field="header.value"
-                :saveSettings="saveSettings"
+                :saveSettings="header.renderCheckbox"
         >
 
         </e-checkbox>

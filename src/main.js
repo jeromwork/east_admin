@@ -26,7 +26,7 @@ $axios.CONNECTOR_URL = 'remote/connector.php';
 
 store.$http = $axios;
 
-Vue.prototype.$http = Axios;
+Vue.prototype.$http = $axios;
 
 new Vue({
   store,

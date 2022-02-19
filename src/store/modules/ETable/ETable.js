@@ -77,7 +77,6 @@ export default {
 
             let headerItems = [];
             let accessItems = rootGetters['Access/access'](state.id);
-            console.log(accessItems)
             if(accessItems && AccessMap && AccessMap[state.id]){
                 let healthSpecialsETable = AccessMap[state.id];
                 for (let id in healthSpecialsETable ){

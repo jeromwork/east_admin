@@ -5,7 +5,7 @@ export default  {
         name : { data : {text: 'Название', value: 'name',},},
         weight : { data : {text: 'Вес', value: 'weight',},},
         iid : { data : {text: 'iid', value: 'iid',  },},
-        off : { data :  {text: 'Отключен', value: 'off', renderCheckbox:true,},},
+        off : { data :  {text: 'Отключен', value: 'off', renderCheckbox:{component:'health', item:'specials', action:'set'},},},
     }
 
 }

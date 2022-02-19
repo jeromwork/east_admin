@@ -73,7 +73,6 @@ const Access = {
 
     getters: {
         access: state => (component) =>{
-            console.log(state.accessData[component])
             return state.accessData[component];      },
 
         getRawAccessList : state => (name) =>{
