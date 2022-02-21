@@ -30,7 +30,20 @@
           saveData(value){
             console.log(value)
             console.log(this)
-            let requestData = { action: this.saveSettings.item + '/' + this.saveSettings.action, component: this.saveSettings.component};
+
+            console.log(this.item)
+            if(!this.item.id){
+              throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
+            }
+
+            let data = {};
+            data[this.field] = +value;
+            let requestData = {
+              action: this.saveSettings.item + '/' + this.saveSettings.action,
+              component: this.saveSettings.component,
+              id:this.item.id,
+              data,
+            };
             this.$http.post(this.$http.CONNECTOR_URL, requestData )
                     .then(response => {
                       this.info = response
