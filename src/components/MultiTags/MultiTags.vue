@@ -5,16 +5,22 @@
             multiple
             outlined
             small-chips
+            :loading="loading"
             :value="tagsSelected"
             :disabled="disabled"
-            :items="listItems"
+            :items="items"
+            @focus="getItems"
             :deletable-chips="true"
             :auto-select-first="true"
-            :search-input.sync="searchInput"
+            :search-input.sync="search"
             :menu-props="{ offsetY: true, }"
             :hide-no-data="true"
-            :label="this.placeholder"
+            :label="this.saveSettings.placeholder"
+            item-text="name"
+            item-value="id"
             v-on:change="onChange"
+            @open="onOpen"
+            :loader-height="5"
     ></v-autocomplete>
     </div>
 </template>
@@ -24,113 +30,122 @@
 
 
 <script>
-    import axios from 'axios'
-    //todo Сделать ajax подгрузку
-    //сейчас все тэги загружаются при создании компонента.
-    //если 800 штук плохо но терпимо
-    //но если будут десятки тысяч, нужно переделывать на ajax
+
     export default {
 
         name: 'MultiTags',
 
         props: {
-            action:{
-                type: String,
-                required: true,
-            },
-            placeholder:{
-                type: String,
-            },
-            disabled:{
-                default:false,
-                type: Boolean,
-            },
-            connector:{
-                type: String,
-                required: true,
-            },
-            include_fields:{
-                type: Object,
-            },
             tagsSelected: {
                 type: Array,
             },
             tag:{
                 type: String,
-            }
+            },
+            saveSettings:{
+                component : {type:String, required: true},
+                item: {type:String, required: true},
+                action:{type:String, },
+                placeholder:{type: String, },
+            },
         },
 
         components: {
 
         },
         data: () => ({
-            // iservices_connector_url:,
             items: [],
             select:[],
             info:{},
             searchInput:null,
-            selected:{}
+            selected:{},
+            loading:false,
+            disabled:false,
+            search: null,
         }),
 
 
 
         methods: {
-
-            async search(val){
-
-                if(!val) {return;}
-                const formData = new FormData();
-                formData.append("action", this.action);
-                formData.append("cors_key", '8cbd6a0c2e767862b02887a446bb34ca');
-                formData.append("include_fields", JSON.stringify({'id':'value', 'fullname':'text'}));
-                if(this.searchInput){
-                    formData.append("search", this.searchInput);
-                }
-
-                formData.append("length", '1000');
-                axios
-                    .post(this.urlConnector, formData)
-                    .then(response => {
-                        this.info = response;
-
-
-                        this.items = response.data.data;
-                        //console.log(this);
-                        //
-                    }).catch(error => console.log(error));
+            onOpen(){
+                console.log('onOpen')
             },
-            async GET_ITEMS(){
 
-                let qdata = {
-                    action: this.action,
-                    cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
-                    tag:this.tag,
-                    include_fields : this.include_fields,
-                    length : 1000,
-                };
-                axios
-
-                    .post(this.urlConnector, qdata)
-                    .then(response => {
-
-                        if(Array.isArray(response.data.data)){
-                            response.data.data.map((item) => {
-                                this.items.push({text:item.text, value:item.value*1});
-                            })
-
-
-                        }
-                        //this.items = response.data.data;
-
-
-
-                        //this.commit('doctorSettings/FILL_DOCTOR_SETTINGS_DATA', response.data);
-                    });
-            },
+            // async search(val){
+            //
+            //     if(!val) {return;}
+            //     const formData = new FormData();
+            //     formData.append("action", this.action);
+            //     formData.append("cors_key", '8cbd6a0c2e767862b02887a446bb34ca');
+            //     formData.append("include_fields", JSON.stringify({'id':'value', 'fullname':'text'}));
+            //     if(this.searchInput){
+            //         formData.append("search", this.searchInput);
+            //     }
+            //
+            //     formData.append("length", '1000');
+            //     axios
+            //         .post(this.urlConnector, formData)
+            //         .then(response => {
+            //             this.info = response;
+            //
+            //
+            //             this.items = response.data.data;
+            //             //console.log(this);
+            //             //
+            //         }).catch(error => console.log(error));
+            // },
+            // async GET_ITEMS(){
+            //
+            //     let qdata = {
+            //         action: this.action,
+            //         cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
+            //         tag:this.tag,
+            //         include_fields : this.include_fields,
+            //         length : 1000,
+            //     };
+            //     axios
+            //
+            //         .post(this.urlConnector, qdata)
+            //         .then(response => {
+            //
+            //             if(Array.isArray(response.data.data)){
+            //                 response.data.data.map((item) => {
+            //                     this.items.push({text:item.text, value:item.value*1});
+            //                 })
+            //
+            //
+            //             }
+            //             //this.items = response.data.data;
+            //
+            //
+            //
+            //             //this.commit('doctorSettings/FILL_DOCTOR_SETTINGS_DATA', response.data);
+            //         });
+            // },
             onChange(value){
                 //console.log(value);
                 this.$emit('change-tags', value)
-            }
+            },
+            getItems(){
+                if(this.items.length === 0){
+                    this.items = [{name:'краниосакральная терапия', id:5},
+                        {name:'краниосакральная терапия', id:6},
+                        {name:'краниосакральная терапия', id:7},
+                        {name:'краниосакральная терапия', id:85},
+                        {name:'краниосакральная терапия', id:9},
+                        {name:'краниосакральная терапия', id:60},
+                        {name:'краниосакральная терапия', id:45},
+                        {name:'краниосакральная терапия', id:46},
+                        {name:'краниосакральная терапия', id:48},
+                    ];
+                    console.log('getItems')
+                }else {
+
+                    console.log('already Items')
+                }
+
+            },
+
 
         },
         updated() {
@@ -138,29 +153,64 @@
         },
         created(){
 
-                         this.GET_ITEMS();
+                         //this.GET_ITEMS();
 
         },
+        watch: {
+            search(val) {
 
+                // Items have already been loaded
+                if (this.items.length > 0) return
+                console.log(val)
+
+                // Items have already been requested
+                if (this.isLoading) return
+
+                this.isLoading = true
+
+                return;
+                // Lazily load input items
+                // fetch('https://api.publicapis.org/entries')
+                //     .then(res => res.json())
+                //     .then(res => {
+                //         const {count, entries} = res
+                //         this.count = count
+                //         this.entries = entries
+                //     })
+                //     .catch(err => {
+                //         console.log(err)
+                //     })
+                //     .finally(() => (this.isLoading = false))
+            },
+        },
         computed:{
 
             listItems:{
                 get(){
-                    //console.log(this.items);
-                    return this.items;
+
+
+                    return [{name:'краниосакральная терапия', id:5},
+                        {name:'краниосакральная терапия', id:6},
+                        {name:'краниосакральная терапия', id:7},
+                        {name:'краниосакральная терапия', id:85},
+                        {name:'краниосакральная терапия', id:9},
+                        {name:'краниосакральная терапия', id:60},
+                        {name:'краниосакральная терапия', id:45},
+                        {name:'краниосакральная терапия', id:46},
+                        {name:'краниосакральная терапия', id:48},
+                    ];
                 },
                 // set(val){        console.log(val);
                 //     this.items = val;
                 // },
             },
-            urlConnector:{
-                get(){
-                    return (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/'+this.connector+'/connector.php': 'http://dev.eastclinic.local/assets/components/eastclinic/'+this.connector+'/connector.php'
-                //return u;
-                }
+            // items:{
+            //     get(){
+            //         console.log(3434344);
+            //         return [];
+            //     }
+            // }
 
-
-            },
 
         }
 

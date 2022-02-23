@@ -9,6 +9,8 @@
       :server-items-length="getTotalCountItems"
       @update:options="setOptions"
     >
+
+
       <template
               v-for="header in getTableHeadItemsRenderCheckbox"
               v-slot:[`item.${header.value}`]="{ item }"
@@ -23,6 +25,20 @@
         </e-checkbox>
       </template>
 
+      <template
+              v-for="header in getTableHeadItemsRenderMultiTags"
+              v-slot:[`item.${header.value}`]="{ item }"
+      >
+        <multi-tags
+                :key="header.value"
+                :item="item"
+                :field="header.value"
+                :saveSettings="header.renderMultiTags"
+        >
+
+        </multi-tags>
+      </template>
+
     </v-data-table>
 
   </div>
@@ -33,11 +49,13 @@
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
+    import MultiTags from "../../components/MultiTags/MultiTags";
     //const {state:  stateModule,getters, mutations} = ETable
 
     export default {
       components: {
         'e-checkbox' : ECheckbox,
+        'multi-tags' : MultiTags,
       },
         name: "ETable",
         props: {
@@ -103,6 +121,16 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.renderCheckbox; });
+            console.log(headers)
+            return headers;
+          },
+        },
+        getTableHeadItemsRenderMultiTags:{
+          get(){
+
+            let headers = this._.filter(this.getTableHeadItems, function(h) {
+              return h.renderMultiTags; });
+            console.log(headers)
             return headers;
           },
         },

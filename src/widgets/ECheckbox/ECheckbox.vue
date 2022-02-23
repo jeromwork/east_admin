@@ -37,7 +37,7 @@
             }
 
             let data = {};
-            data[this.field] = +value;
+            data[this.field] = + value;
             let requestData = {
               action: this.saveSettings.item + '/' + this.saveSettings.action,
               component: this.saveSettings.component,

@@ -3,8 +3,8 @@ export default  {
         id :{ data : { text: 'id', align: 'start', value: 'id', }},
         id2 : { data : { text: 'id', align: 'start', value: 'id', },},
         name : { data : {text: 'Название', value: 'name',},},
-        weight : { data : {text: 'Вес', value: 'weight',},},
         iid : { data : {text: 'iid', value: 'iid',  },},
+        services : { data : {text: 'Подключенные услуги', value: 'services',  renderMultiTags:{component:'health', item:'services', getAction:'get', setAction:'set'},},},
         off : { data :  {text: 'Отключен', value: 'off', renderCheckbox:{component:'health', item:'specials', action:'set'},},},
     }
 
