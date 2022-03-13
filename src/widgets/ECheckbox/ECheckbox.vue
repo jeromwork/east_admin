@@ -16,8 +16,8 @@
               id:Number,
             },
           id:{},
-            field:String,
-          saveSettings:{
+          field:{type:String, required: true},
+          options:{
             component : {type:String, required: true},
             item: {type:String, required: true},
             action:{type:String, },
@@ -39,8 +39,8 @@
             let data = {};
             data[this.field] = + value;
             let requestData = {
-              action: this.saveSettings.item + '/' + this.saveSettings.action,
-              component: this.saveSettings.component,
+              action: this.options.item + '/' + this.options.action,
+              component: this.options.component,
               id:this.item.id,
               data,
             };
@@ -56,6 +56,10 @@
                     });
           }
       },
+      created() {
+        console.log(this.item)
+        console.log(this.field)
+      }
     }
 </script>
 

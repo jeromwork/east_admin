@@ -12,31 +12,25 @@
 
 
       <template
-              v-for="header in getTableHeadItemsRenderCheckbox"
-              v-slot:[`item.${header.value}`]="{ item }"
-      >
-        <e-checkbox
-                :key="header.value"
-                :item="item"
-                :field="header.value"
-                :saveSettings="header.renderCheckbox"
-        >
-
-        </e-checkbox>
-      </template>
-
-      <template
-              v-for="header in getTableHeadItemsRenderMultiTags"
+              v-for="header in getTableHeadItemsNeedRender"
               v-slot:[`item.${header.value}`]="{ item }"
       >
         <multi-tags
+                v-if="header.render.type == 'multiTags'"
                 :key="header.value"
                 :item="item"
                 :field="header.value"
-                :saveSettings="header.renderMultiTags"
-        >
+                :serverSettings="header.options"
+        ></multi-tags>
 
-        </multi-tags>
+        <e-checkbox
+                v-if="header.render.type == 'checkbox'"
+                :key="header.value"
+                :item="item"
+                :field="header.value"
+                :options="header.options"
+        ></e-checkbox>
+
       </template>
 
     </v-data-table>
@@ -46,6 +40,26 @@
 </template>
 
 <script>
+  /*
+  *
+  *       <template
+              v-for="header in getTableHeadItemsRenderMultiTags"
+              v-slot:[`item.${header.value}`]="{ item }"
+      >
+
+        {{`item.${header.value}`}}
+        <multi-tags
+                :key="header.value"
+                :item="item"
+                :field="header.value"
+                :serverSettings="header.renderMultiTags"
+        >
+
+        </multi-tags>
+      </template>
+  * */
+
+
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
@@ -130,6 +144,14 @@
 
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.renderMultiTags; });
+            console.log(headers)
+            return headers;
+          },
+        },
+        getTableHeadItemsNeedRender:{
+          get(){
+            let headers = this._.filter(this.getTableHeadItems, function(h) {
+              return h.render; });
             console.log(headers)
             return headers;
           },

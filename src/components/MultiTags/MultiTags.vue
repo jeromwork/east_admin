@@ -1,12 +1,13 @@
 <template>
-<div>
+
     <v-autocomplete
             hide-selected
             multiple
             outlined
             small-chips
+            v-model="values"
             :loading="loading"
-            :value="tagsSelected"
+            :value="value"
             :disabled="disabled"
             :items="items"
             @focus="getItems"
@@ -15,14 +16,15 @@
             :search-input.sync="search"
             :menu-props="{ offsetY: true, }"
             :hide-no-data="true"
-            :label="this.saveSettings.placeholder"
+            :label="this.serverSettings.placeholder"
             item-text="name"
             item-value="id"
-            v-on:change="onChange"
             @open="onOpen"
-            :loader-height="5"
+            :loader-height="10"
+            :cache-items="true"
     ></v-autocomplete>
-    </div>
+
+
 </template>
 
 
@@ -31,6 +33,11 @@
 
 <script>
 
+
+    /*
+
+    *
+    * */
     export default {
 
         name: 'MultiTags',
@@ -42,11 +49,16 @@
             tag:{
                 type: String,
             },
-            saveSettings:{
+            serverSettings:{
                 component : {type:String, required: true},
                 item: {type:String, required: true},
                 action:{type:String, },
                 placeholder:{type: String, },
+                fields:{type:Array, },
+            },
+            item:{
+                type: Object,
+                required:true,
             },
         },
 
@@ -54,6 +66,8 @@
 
         },
         data: () => ({
+            value:[],
+            values: [],
             items: [],
             select:[],
             info:{},
@@ -67,83 +81,38 @@
 
 
         methods: {
+
             onOpen(){
                 console.log('onOpen')
             },
+            async getItems(searchKey){
+                searchKey = (searchKey) ? searchKey : '';
+                //console.log(this.serverSettings)
 
-            // async search(val){
-            //
-            //     if(!val) {return;}
-            //     const formData = new FormData();
-            //     formData.append("action", this.action);
-            //     formData.append("cors_key", '8cbd6a0c2e767862b02887a446bb34ca');
-            //     formData.append("include_fields", JSON.stringify({'id':'value', 'fullname':'text'}));
-            //     if(this.searchInput){
-            //         formData.append("search", this.searchInput);
-            //     }
-            //
-            //     formData.append("length", '1000');
-            //     axios
-            //         .post(this.urlConnector, formData)
-            //         .then(response => {
-            //             this.info = response;
-            //
-            //
-            //             this.items = response.data.data;
-            //             //console.log(this);
-            //             //
-            //         }).catch(error => console.log(error));
-            // },
-            // async GET_ITEMS(){
-            //
-            //     let qdata = {
-            //         action: this.action,
-            //         cors_key : '8cbd6a0c2e767862b02887a446bb34ca',
-            //         tag:this.tag,
-            //         include_fields : this.include_fields,
-            //         length : 1000,
-            //     };
-            //     axios
-            //
-            //         .post(this.urlConnector, qdata)
-            //         .then(response => {
-            //
-            //             if(Array.isArray(response.data.data)){
-            //                 response.data.data.map((item) => {
-            //                     this.items.push({text:item.text, value:item.value*1});
-            //                 })
-            //
-            //
-            //             }
-            //             //this.items = response.data.data;
-            //
-            //
-            //
-            //             //this.commit('doctorSettings/FILL_DOCTOR_SETTINGS_DATA', response.data);
-            //         });
-            // },
-            onChange(value){
-                //console.log(value);
-                this.$emit('change-tags', value)
-            },
-            getItems(){
-                if(this.items.length === 0){
-                    this.items = [{name:'краниосакральная терапия', id:5},
-                        {name:'краниосакральная терапия', id:6},
-                        {name:'краниосакральная терапия', id:7},
-                        {name:'краниосакральная терапия', id:85},
-                        {name:'краниосакральная терапия', id:9},
-                        {name:'краниосакральная терапия', id:60},
-                        {name:'краниосакральная терапия', id:45},
-                        {name:'краниосакральная терапия', id:46},
-                        {name:'краниосакральная терапия', id:48},
-                    ];
-                    console.log('getItems')
-                }else {
+                let requestData = {
+                    action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
+                    component:this.serverSettings.component,
+                    search:searchKey,
+                    requestOptions:{
+                        fields:(this.serverSettings.fields) ? this.serverSettings.fields : ['id', 'name'],
 
-                    console.log('already Items')
-                }
+                    },
+                };
 
+                this.$http.post(this.$http.CONNECTOR_URL, requestData )
+                    .then(response => {this.info = response
+                        if(!response.data || !response.data.items || !response.data.count)
+                        {
+                            console.log('Проверьте структуру данных Специальностей');
+                            return;
+                        }
+                        this.items = response.data.items;
+                        console.log(this.items)
+                        console.log(this.values)
+
+                        return;
+
+                    });
             },
 
 
@@ -151,17 +120,39 @@
         updated() {
             this.selected = this.tagsSelected;
         },
+        render : () =>  {            return '<div>asdfasdf</div>';
+        },
         created(){
+            if(this.item && this.item[this.serverSettings.item]){
+                //this.value = this.item[this.serverSettings.item];
+                let defaultValues = this._.values(this.item[this.serverSettings.item])
+                this.values = this._.map(defaultValues, function(item) {
+                    //console.log(item)
+                    let adapterItem = {};
+                    if(item.title){
+                        adapterItem.name = item.title;
+                    }else if(item.name){
+                        adapterItem.name = item.name;
+                    }
+                    adapterItem.id = item.id+'';
+                    if(!adapterItem.name){
+                        throw new Error('Неправильный адаптер, невозможно распарсить значения')
+                    }
+                    return adapterItem;
+                });
 
-                         //this.GET_ITEMS();
+                this.items = this.values;
+                //this.values = [{id:22, name:'ttre'}];
+                //console.log(this.values)
+            }
 
         },
         watch: {
             search(val) {
-
+                this.getItems(val);
                 // Items have already been loaded
                 if (this.items.length > 0) return
-                console.log(val)
+
 
                 // Items have already been requested
                 if (this.isLoading) return
@@ -169,48 +160,10 @@
                 this.isLoading = true
 
                 return;
-                // Lazily load input items
-                // fetch('https://api.publicapis.org/entries')
-                //     .then(res => res.json())
-                //     .then(res => {
-                //         const {count, entries} = res
-                //         this.count = count
-                //         this.entries = entries
-                //     })
-                //     .catch(err => {
-                //         console.log(err)
-                //     })
-                //     .finally(() => (this.isLoading = false))
             },
+
         },
         computed:{
-
-            listItems:{
-                get(){
-
-
-                    return [{name:'краниосакральная терапия', id:5},
-                        {name:'краниосакральная терапия', id:6},
-                        {name:'краниосакральная терапия', id:7},
-                        {name:'краниосакральная терапия', id:85},
-                        {name:'краниосакральная терапия', id:9},
-                        {name:'краниосакральная терапия', id:60},
-                        {name:'краниосакральная терапия', id:45},
-                        {name:'краниосакральная терапия', id:46},
-                        {name:'краниосакральная терапия', id:48},
-                    ];
-                },
-                // set(val){        console.log(val);
-                //     this.items = val;
-                // },
-            },
-            // items:{
-            //     get(){
-            //         console.log(3434344);
-            //         return [];
-            //     }
-            // }
-
 
         }
 
