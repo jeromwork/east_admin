@@ -5,6 +5,8 @@
                :options="specialsTableOptions"
                dense
                item-key="id"
+               @dblclick:row="dblclickRow"
+               :fields="getFields"
        ></e-table>
 
 
@@ -36,14 +38,22 @@
              'e-table' : ETable,
         },
         methods: {
-
+          dblclickRow(e, data){
+            console.log(e)
+            console.log(data)
+          }
         },
 
         created(){
 
         },
         computed:{
-
+          getFields:{
+            get(){
+              console.log(this.$store.getters["SpecialsSettings/getTableHeadItems"])
+              return this.$store.getters["SpecialsSettings/getTableHeadItems"];
+            },
+          },
         },
 
     }

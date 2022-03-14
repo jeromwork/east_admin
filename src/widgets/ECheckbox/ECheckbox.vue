@@ -57,8 +57,7 @@
           }
       },
       created() {
-        console.log(this.item)
-        console.log(this.field)
+
       }
     }
 </script>

@@ -8,6 +8,7 @@
       item-key="id"
       :server-items-length="getTotalCountItems"
       @update:options="setOptions"
+      @dblclick:row="dblclickRow"
     >
 
 
@@ -82,6 +83,7 @@
             action:String,
 
           },
+          fields:{type:Array, required: true},
         },
         data: function () {return {
           storeName: '',
@@ -118,7 +120,9 @@
           this.getItems();
         },
 
-
+        dblclickRow(e,row){
+          this.$emit('dblclick:row', e, row.item)
+        }
       },
       computed:{
         items:{
@@ -128,7 +132,8 @@
         },
         getTableHeadItems:{
           get(){
-            return this.$store.getters[this.storeName + "/getTableHeadItems"];
+            return this.fields;
+            //return this.$store.getters[this.storeName + "/getTableHeadItems"];
           },
         },
         getTableHeadItemsRenderCheckbox:{

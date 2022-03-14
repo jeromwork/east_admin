@@ -9,7 +9,7 @@ import DocSelect from './modules/DocSelect/DocSelect'
 import Menu from './modules/Menu/Menu'
 import JWT from './modules/JWT/JWT'
 import HealthSettings from "./modules/HealthSettings/HealthSettings";
-import SpecialsSettings2 from "./modules/HealthSettings/SpecialsSettings";
+import SpecialsSettings from "./modules/HealthSettings/SpecialsSettings";
 import Access from './modules/Access/Access'
 //import AccessSocketPlugin from "./plugins/webSockets/Access";
 
@@ -26,7 +26,7 @@ export default new Vuex.Store({
       JWT,
       Menu,
       DocSelect,
-      SpecialsSettings2,
+    SpecialsSettings,
       HealthSettings,
       Access,
   },
