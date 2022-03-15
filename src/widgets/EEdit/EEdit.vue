@@ -30,7 +30,7 @@
               <v-btn
                 dark
                 text
-                @click="$emit('close')"
+                @click="save"
               >
                 Save
               </v-btn>
@@ -90,7 +90,25 @@
 
       </v-card>
     </v-dialog>
+
+    <v-snackbar
+      v-model="saveSuccess"
+      right
+    >
+      Сохранено успешно
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="pink"
+          text
+          v-bind="attrs"
+          @click="saveSuccess = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
+
 </template>
 
 <script>
@@ -131,12 +149,16 @@
             ],
 
             mapRowsCols : [],
-
+            saveSuccess:false,
 
           }
         },
       methods:{
-
+        save(){
+          console.log(234234)
+          this.$emit('close');
+          this.saveSuccess = true
+        },
       },
       mounted() {
         //console.log(this.fields)
