@@ -36,7 +36,6 @@ export default {
                 }
 
             }
-            console.log(menuItems)
             if(menuItems.length === 0){
               //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
             }

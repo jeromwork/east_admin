@@ -73,25 +73,6 @@ export default {
         getItems : state => {
             return state.Items;
         },
-        // getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
-        //
-        //     let headerItems = [];
-        //     let accessItems = rootGetters['Access/access'](state.id);
-        //     if(accessItems && AccessMap && AccessMap[state.id]){
-        //         let healthSpecialsETable = AccessMap[state.id];
-        //         for (let id in healthSpecialsETable ){
-        //             if(accessItems[id] && healthSpecialsETable[id]['data']){
-        //                 headerItems.push(healthSpecialsETable[id]['data'])
-        //             }
-        //
-        //         }
-        //
-        //         if(headerItems.length === 0){
-        //             //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
-        //         }
-        //     }
-        //     return headerItems;
-        // },
         getTotalCountItems :state => {
             return state.count;
         }

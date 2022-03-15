@@ -2,7 +2,8 @@
 //для получения хедеров, нужно выбрать только разрешенные поля из acess
 //так же еще будут настройки какие поля отображать (потом можно будет вынести эти настройки в одтельный компонент)
 //items нужно получать с сервера
-import AccessMap from './acess/healthSpecialsETable'
+import EditFieldsSettings from './acess/healthSpecialsEditFields.js'
+import ETableFieldsSettings from './acess/healthSpecialsETable.js'
 
 export default {
     namespaced:true,
@@ -66,19 +67,19 @@ export default {
     },
     getters: {
         getSpecials : state => {
+          console.log('getSpecials')
             return state.specials;
         },
 
         getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
             let headerItems = [];
             let accessItems = rootGetters['Access/access']('healthSpecialsSettings');
-            if(accessItems && AccessMap && AccessMap['healthSpecialsSettings']){
-                let healthSpecialsETable = AccessMap['healthSpecialsSettings'];
+            if(accessItems && ETableFieldsSettings && ETableFieldsSettings['healthSpecialsSettings']){
+                let healthSpecialsETable = ETableFieldsSettings['healthSpecialsSettings'];
                 for (let id in healthSpecialsETable ){
                     if(accessItems[id] && healthSpecialsETable[id]['data']){
                         headerItems.push(healthSpecialsETable[id]['data'])
                     }
-
                 }
 
                 if(headerItems.length === 0){
@@ -87,6 +88,26 @@ export default {
             }
             return headerItems;
         },
+        getEditFields: (state, getters,rootState, rootGetters) => {
+          let headerItems = [];
+          let Access = rootGetters['Access/access'];//ссылка на метод выдающий объект доступа
+          let accessItems = Access('healthSpecialsSettings');
+          if(accessItems && EditFieldsSettings && EditFieldsSettings['healthSpecialsEditFields']){
+            let healthSpecialsETable = EditFieldsSettings['healthSpecialsEditFields'];
+            for (let id in healthSpecialsETable ){
+              if(accessItems[id] &&  healthSpecialsETable[id]['data']){
+                headerItems.push(healthSpecialsETable[id]['data'])
+              }
+
+            }
+
+            if(headerItems.length === 0){
+              //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
+            }
+          }
+          return headerItems;
+        },
+
         getTotalCountSpecials :state => {
             return state.count;
         }

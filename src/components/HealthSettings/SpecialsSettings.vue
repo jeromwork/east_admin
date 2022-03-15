@@ -1,27 +1,38 @@
 <template>
+
     <div>
 
-       <e-table
+        <e-table
                :options="specialsTableOptions"
                dense
                item-key="id"
-               @dblclick:row="dblclickRow"
-               :fields="getFields"
+               @editItem="editItem"
+               :fields="eTableFields"
        ></e-table>
 
 
-
-
+      <div>
+        <e-edit :toogle="showEditDialog"
+                @close="showEditDialog=false"
+                :fields="eEditFields"
+                :item="currentEditItem"
+        >
+        </e-edit>
+      </div>
     </div>
 </template>
 
 
 <script>
      import ETable from "../../widgets/ETable/ETable";
+     import EEdit from "../../widgets/EEdit/EEdit";
 
     export default {
         name: "SpecialsSettings",
-
+      components: {
+        'e-edit' : EEdit,
+        'e-table' : ETable,
+      },
         data: () => ({
           saveSettings:{
             component : 'health',
@@ -33,14 +44,17 @@
                 action:'getVue'
             },
             sl:true,
+          showEditDialog:false,
+          currentEditItem : {},
+
+
+
         }),
-        components: {
-             'e-table' : ETable,
-        },
+
         methods: {
-          dblclickRow(e, data){
-            console.log(e)
-            console.log(data)
+          editItem(e, item){
+            this.showEditDialog = true
+            this.currentEditItem = item;
           }
         },
 
@@ -48,10 +62,14 @@
 
         },
         computed:{
-          getFields:{
+          eTableFields:{
             get(){
-              console.log(this.$store.getters["SpecialsSettings/getTableHeadItems"])
               return this.$store.getters["SpecialsSettings/getTableHeadItems"];
+            },
+          },
+          eEditFields:{
+            get(){
+              return this.$store.getters["SpecialsSettings/getEditFields"];
             },
           },
         },

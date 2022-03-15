@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
 
         if (isAuthenticated()) {
             //здесь же проверка на доступ к компоненту
-            console.log(store.getters["Login/currentUserGroup"])
+            //console.log(store.getters["Login/currentUserGroup"])
 
             next();
         } else {

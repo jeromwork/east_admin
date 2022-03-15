@@ -22,6 +22,8 @@
                 :item="item"
                 :field="header.value"
                 :serverSettings="header.options"
+                :fieldSettins="header"
+
         ></multi-tags>
 
         <e-checkbox
@@ -121,7 +123,7 @@
         },
 
         dblclickRow(e,row){
-          this.$emit('dblclick:row', e, row.item)
+          this.$emit('editItem', e, row.item)
         }
       },
       computed:{
@@ -140,7 +142,7 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.renderCheckbox; });
-            console.log(headers)
+            //console.log(headers)
             return headers;
           },
         },
@@ -149,7 +151,7 @@
 
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.renderMultiTags; });
-            console.log(headers)
+            //console.log(headers)
             return headers;
           },
         },
@@ -157,7 +159,7 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.render; });
-            console.log(headers)
+            //console.log(headers)
             return headers;
           },
         },

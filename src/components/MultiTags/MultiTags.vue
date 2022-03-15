@@ -16,7 +16,7 @@
             :search-input.sync="search"
             :menu-props="{ offsetY: true, }"
             :hide-no-data="true"
-            :label="this.serverSettings.placeholder"
+            :label="label"
             item-text="name"
             item-value="id"
             @open="onOpen"
@@ -60,6 +60,11 @@
                 type: Object,
                 required:true,
             },
+          fieldSettins:{
+            type: Object,
+            required:true,
+          },
+          label:{type:String},
         },
 
         components: {
