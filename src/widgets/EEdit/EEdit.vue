@@ -53,7 +53,7 @@
 
                   <v-text-field
                     v-if="field.render.type==='text'"
-                    :model="editedItem[field.value]"
+                    v-model="editedItem[field.value]"
                     :counter="field.countSymbols"
                     :label="field.text"
                     required
@@ -61,8 +61,7 @@
 
                   <multi-tags
                     v-if="field.render.type == 'multiTags'"
-                    :model="editedItem[field.value]"
-                    :value="editedItem[field.value]"
+                    v-model="editedItem[field.value]"
                     :key="field.value"
                     :item="item"
                     :field="field.value"
@@ -73,7 +72,7 @@
 
                   <v-checkbox
                     v-if="field.render.type == 'checkbox'"
-                    :model="editedItem[field.value]"
+                    v-model="editedItem[field.value]"
                     :input-value="field.value"
                     :label="field.text"
                   ></v-checkbox>
@@ -136,6 +135,8 @@
         data:() => {
           return {
             dialog: false,
+
+
 
             notifications: false,
             sound: true,
@@ -215,7 +216,7 @@
       watch:{
         item(item){
           console.log(item)
-          this.editedItem = item;
+          this.editedItem = {...item};
         },
 
         fields(fields){
