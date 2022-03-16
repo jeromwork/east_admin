@@ -162,12 +162,6 @@
           }
         },
       methods:{
-        change(val, itemType){
-          //this.editedItem = val
-          console.log(val);
-          console.log(this)
-          console.log(itemType)
-        },
         save(){
 
           console.log(this.serverSettings)
@@ -191,7 +185,33 @@
 
 
           console.log(requestData)
+          console.log(this.fields)
           console.log(this.editedItem)
+
+          //обходим настройки полей.
+          //если видем у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
+          //если настройки уже были, значит добавляем данные для сохранения
+          //отправляем данные для сохранения, только в том случае, если для такого поля была настройка рендеринга
+
+          let saveFields = {};
+            this._.map(this.fields, (field) => {
+            console.log(field.serverSettings)
+            if(field.serverSettings && field.serverSettings){
+              let keyServerSettings = '';
+              if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
+              if(field.serverSettings.item) keyServerSettings += field.serverSettings.item;
+              if(field.serverSettings.setAction) keyServerSettings += field.serverSettings.setAction;
+
+              if(!saveFields[keyServerSettings]){
+
+              }
+              saveFields[keyServerSettings] = '';
+            }
+
+
+          });
+
+          console.log(saveFields)
 
           // console.log(requestData);
           // this.$http.post(this.$http.CONNECTOR_URL, requestData )
