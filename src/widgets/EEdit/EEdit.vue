@@ -57,15 +57,16 @@
                     :counter="field.countSymbols"
                     :label="field.text"
                     required
-                    :value="item[field.value]"
                   ></v-text-field>
 
                   <multi-tags
                     v-if="field.render.type == 'multiTags'"
+                    :model="editedItem[field.value]"
+                    :value="editedItem[field.value]"
                     :key="field.value"
                     :item="item"
                     :field="field.value"
-                    :serverSettings="field.options"
+                    :serverSettings="field.serverSettings"
                     :fieldSettins="field"
                     :label="field.text"
                   ></multi-tags>
@@ -95,7 +96,7 @@
       v-model="saveSuccess"
       right
     >
-      Сохранено успешно
+      {{lastMessageFromServer}}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="pink"
@@ -123,7 +124,14 @@
         props:{
           toogle:Boolean,
           fields:{  type:Array, required:true,  },
-          item:{type: Object}
+          item:{type: Object},
+          serverSettings:{
+            component:{  type:String, required:true,  },
+            itemType:{  type:String, required:true,  },
+            action:{  type:String, required:true,  },
+            required:true,
+          },
+
         },
         data:() => {
           return {
@@ -136,8 +144,7 @@
 
 
             valid: false,
-            firstname: '',
-            lastname: '',
+
             nameRules: [
               v => !!v || 'Name is required',
               v => v.length <= 10 || 'Name must be less than 10 characters',
@@ -150,22 +157,66 @@
 
             mapRowsCols : [],
             saveSuccess:false,
-
+            lastMessageFromServer:'',
           }
         },
       methods:{
+        change(val, itemType){
+          //this.editedItem = val
+          console.log(val);
+          console.log(this)
+          console.log(itemType)
+        },
         save(){
-          console.log(234234)
+
+          console.log(this.serverSettings)
+          this.lastMessageFromServer = 'Сохранение прошло успешно!';
           this.$emit('close');
           this.saveSuccess = true
+          if(!this.item.id){
+            throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
+          }
+
+           // let data = {};
+
+
+          // data[this.field] = + value;
+          let requestData = {
+            action: this.serverSettings.itemType + '/' + this.serverSettings.action,
+            component: this.serverSettings.component,
+            id:this.item.id,
+            //data,
+          };
+
+
+          console.log(requestData)
+          console.log(this.editedItem)
+
+          // console.log(requestData);
+          // this.$http.post(this.$http.CONNECTOR_URL, requestData )
+          //   .then(response => {
+          //     this.info = response
+          //     if(!response.data || !response.data.items || !response.data.count)
+          //     {
+          //       console.log('Проверьте структуру данных Специальностей');
+          //       return;
+          //     }
+          //
+          //   });
         },
       },
       mounted() {
+        //console.log(2323123)
+
         //console.log(this.fields)
       },
       computed:{
       },
       watch:{
+        item(item){
+          console.log(item)
+          this.editedItem = item;
+        },
 
         fields(fields){
           let cols = 12;

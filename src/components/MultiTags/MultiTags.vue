@@ -55,6 +55,7 @@
                 action:{type:String, },
                 placeholder:{type: String, },
                 fields:{type:Array, },
+              required:true,
             },
             item:{
                 type: Object,
@@ -112,10 +113,7 @@
                             return;
                         }
                         this.items = response.data.items;
-                        console.log(this.items)
-                        console.log(this.values)
-
-                        return;
+                                              return;
 
                     });
             },

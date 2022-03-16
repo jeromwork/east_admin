@@ -17,10 +17,10 @@
             },
           id:{},
           field:{type:String, required: true},
-          options:{
+          serverSettings:{
             component : {type:String, required: true},
             item: {type:String, required: true},
-            action:{type:String, },
+            action:{type:String, required: true },
           }
 
 
@@ -39,8 +39,8 @@
             let data = {};
             data[this.field] = + value;
             let requestData = {
-              action: this.options.item + '/' + this.options.action,
-              component: this.options.component,
+              action: this.serverSettings.item + '/' + this.serverSettings.action,
+              component: this.serverSettings.component,
               id:this.item.id,
               data,
             };

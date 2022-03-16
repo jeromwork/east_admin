@@ -3,7 +3,7 @@
     <div>
 
         <e-table
-               :options="specialsTableOptions"
+               :serverSettings="specialsTableOptions"
                dense
                item-key="id"
                @editItem="editItem"
@@ -16,6 +16,7 @@
                 @close="showEditDialog=false"
                 :fields="eEditFields"
                 :item="currentEditItem"
+                :serverSettings="{component : 'health', itemType : 'specials', action : 'setVue'}"
         >
         </e-edit>
       </div>

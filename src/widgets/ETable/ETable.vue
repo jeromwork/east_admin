@@ -21,7 +21,7 @@
                 :key="header.value"
                 :item="item"
                 :field="header.value"
-                :serverSettings="header.options"
+                :serverSettings="header.serverSettings"
                 :fieldSettins="header"
 
         ></multi-tags>
@@ -31,7 +31,7 @@
                 :key="header.value"
                 :item="item"
                 :field="header.value"
-                :options="header.options"
+                :serverSettings="header.serverSettings"
         ></e-checkbox>
 
       </template>
@@ -80,7 +80,7 @@
             component : String,
             item: String,
           },
-          options:{
+          serverSettings:{
             items:String,
             action:String,
 
@@ -92,7 +92,6 @@
 
         };},
       created() {
-        console.log('created')
         this.initStoreModule();
       },
       methods: {
@@ -100,17 +99,17 @@
         initStoreModule(){
           //при запуске компонента, создается новый vuex модуль, с уникальным именем
           //соответственно мутации и комиты будут через это уникальное имя модуля
-          this.storeName = `ETable_${this.options.items}`;
+          this.storeName = `ETable_${this.serverSettings.items}`;
           store.registerModule(this.storeName, {
             ...ETable,
             component:'specials',
             namespaced: true,
           });
           this.$store.commit(this.storeName + '/SET_ETABLE_OPTIONS', {
-            itemsName:this.options.items,
+            itemsName:this.serverSettings.items,
             id:this.storeName,
-            action:this.options.action,
-            component:this.options.component,
+            action:this.serverSettings.action,
+            component:this.serverSettings.component,
           });
 
         },
@@ -159,7 +158,6 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.render; });
-            //console.log(headers)
             return headers;
           },
         },
