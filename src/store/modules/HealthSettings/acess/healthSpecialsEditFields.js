@@ -1,7 +1,9 @@
 export default  {
   healthSpecialsEditFields:{
         id :{ data : { text: 'id', align: 'start', value: 'id', }},
-        name : { data : {text: 'Название', value: 'name',render:{type:'text', col:{md:12}},},},
+        name : { data : {text: 'Название', value: 'name',
+                render:{type:'text', col:{md:12}},},
+            serverSettings:{component:'health', item:'services', setAction:'set'},},
         iid : { data : {text: 'iid', value: 'iid',  },},
         services : { data : {text: 'Подключенные услуги', value: 'services',
             serverSettings:{component:'health', item:'services', getAction:'getVue', setAction:'set'},

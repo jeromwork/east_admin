@@ -195,7 +195,6 @@
 
           let saveFields = {};
             this._.map(this.fields, (field) => {
-            console.log(field.serverSettings)
             if(field.serverSettings && field.serverSettings){
               let keyServerSettings = '';
               if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
@@ -203,15 +202,22 @@
               if(field.serverSettings.setAction) keyServerSettings += field.serverSettings.setAction;
 
               if(!saveFields[keyServerSettings]){
+                if(field.value && this.editedItem[field.value] !== undefined){
+                  if(!saveFields[keyServerSettings]){
+                    saveFields[keyServerSettings] = {serverSettings : {...field.serverSettings}, data: [{field : field.value, value: this.editedItem[field.value]}] };
+                  }else{
+                    saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
+                  }
 
+                }
               }
-              saveFields[keyServerSettings] = '';
             }
-
-
+          });
+          requestData['save'] = this._.map(saveFields, (settings) => {
+            return settings;
           });
 
-          console.log(saveFields)
+          console.log(requestData)
 
           // console.log(requestData);
           // this.$http.post(this.$http.CONNECTOR_URL, requestData )
