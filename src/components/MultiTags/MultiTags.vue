@@ -5,7 +5,6 @@
             multiple
             outlined
             small-chips
-            v-model="values"
             :loading="loading"
             :value="value"
             :disabled="disabled"
@@ -22,6 +21,7 @@
             @open="onOpen"
             :loader-height="10"
             :cache-items="true"
+            @input="onInput"
     ></v-autocomplete>
 
 
@@ -38,17 +38,20 @@
 
     *
     * */
-    export default {
+  import store from "../../store";
+  import MultiTags from '../../store/modules/MultiTags/MultiTags'
+
+  export default {
 
         name: 'MultiTags',
-
-        props: {
+          props: {
             tagsSelected: {
                 type: Array,
             },
             tag:{
                 type: String,
             },
+            value:{type: Array,},
             serverSettings:{
                 component : {type:String, required: true},
                 item: {type:String, required: true},
@@ -72,7 +75,7 @@
 
         },
         data: () => ({
-            value:[],
+            //value:[],
             values: [],
             items: [],
             select:[],
@@ -88,6 +91,18 @@
 
         methods: {
 
+          onInput(val){
+            console.log(val)
+            // console.log(this.item[this.serverSettings.item])
+            // console.log(this.items)
+            // let inputItems = this._.map(this.items, (val) => {
+            //
+            //   if(val){return val}
+            // });
+            // console.log(inputItems)
+            this.$emit('input', val);
+
+          },
             onOpen(){
                 console.log('onOpen')
             },
@@ -96,7 +111,8 @@
                 //console.log(this.serverSettings)
 
                 let requestData = {
-                    action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
+                    // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
+                  action:  this.serverSettings.getTags,
                     component:this.serverSettings.component,
                     search:searchKey,
                     requestOptions:{
@@ -122,31 +138,54 @@
         },
         updated() {
             this.selected = this.tagsSelected;
+          console.log('updated')
         },
-        render : () =>  {            return '<div>asdfasdf</div>';
-        },
+      mounted() {
+        //console.log(this.editedItem)
+
+        //console.log(this.fields)
+        console.log('mounted')
+      },
+
         created(){
+          //при создании ВСЕХ multiTags собираются все Ids и сохраняются в объект в Store.
+          //в mounted идет обращение на сервер, что бы выдали title тэгов по их ids.
+          //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
+          //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
+
+          if(!store.hasModule('MultiTags')){
+            store.registerModule('MultiTags', {
+              ...MultiTags,
+            });
+          }
+
+
+          this.$store.commit('MultiTags/SET_IDS', {itemType:this.serverSettings.component + '_' +this.serverSettings.item, values:this.value});
+
+          console.log('created')
+          //console.log(this.item[this.serverSettings.item])
+
             if(this.item && this.item[this.serverSettings.item]){
                 //this.value = this.item[this.serverSettings.item];
-                let defaultValues = this._.values(this.item[this.serverSettings.item])
-                this.values = this._.map(defaultValues, function(item) {
-                    //console.log(item)
-                    let adapterItem = {};
-                    if(item.title){
-                        adapterItem.name = item.title;
-                    }else if(item.name){
-                        adapterItem.name = item.name;
-                    }
-                    adapterItem.id = item.id+'';
-                    if(!adapterItem.name){
-                        throw new Error('Неправильный адаптер, невозможно распарсить значения')
-                    }
-                    return adapterItem;
-                });
-
-                this.items = this.values;
-                //this.values = [{id:22, name:'ttre'}];
-                //console.log(this.values)
+              this.items = this._.values(this.item[this.serverSettings.item])
+              return;
+                // let defaultValues = this._.values(this.item[this.serverSettings.item])
+                // this.values = this._.map(defaultValues, function(item) {
+                //     console.log(item)
+                //     let adapterItem = {};
+                //     if(item.title){
+                //         adapterItem.name = item.title;
+                //     }else if(item.name){
+                //         adapterItem.name = item.name;
+                //     }
+                //     adapterItem.id = item.id+'';
+                //     if(!adapterItem.name){
+                //         throw new Error('Неправильный адаптер, невозможно распарсить значения')
+                //     }
+                //     return adapterItem;
+                // });
+                //
+                // this.items = this.values;
             }
 
         },

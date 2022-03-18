@@ -39,7 +39,7 @@
             let data = {};
             data[this.field] = + value;
             let requestData = {
-              action: this.serverSettings.item + '/' + this.serverSettings.action,
+              action: this.serverSettings.actionSave,
               component: this.serverSettings.component,
               id:this.item.id,
               data,

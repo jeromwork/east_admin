@@ -18,6 +18,7 @@
       >
         <multi-tags
                 v-if="header.render.type == 'multiTags'"
+                v-model="item[header.serverSettings.item]"
                 :key="header.value"
                 :item="item"
                 :field="header.value"

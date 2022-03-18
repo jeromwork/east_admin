@@ -68,6 +68,7 @@
                     :serverSettings="field.serverSettings"
                     :fieldSettins="field"
                     :label="field.text"
+                    @input="minput"
                   ></multi-tags>
 
                   <v-checkbox
@@ -162,6 +163,11 @@
           }
         },
       methods:{
+        minput(val){
+
+          // console.log(this.editedItem)
+          console.log(val)
+        },
         save(){
 
           console.log(this.serverSettings)
@@ -177,7 +183,7 @@
 
           // data[this.field] = + value;
           let requestData = {
-            action: this.serverSettings.itemType + '/' + this.serverSettings.action,
+            action: this.serverSettings.actionSave,
             component: this.serverSettings.component,
             id:this.item.id,
             //data,
@@ -198,13 +204,14 @@
             if(field.serverSettings && field.serverSettings){
               let keyServerSettings = '';
               if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
-              if(field.serverSettings.item) keyServerSettings += field.serverSettings.item;
-              if(field.serverSettings.setAction) keyServerSettings += field.serverSettings.setAction;
+              if(field.serverSettings.actionSave) keyServerSettings += field.serverSettings.setAction;
 
               if(field.value && this.editedItem[field.value] !== undefined){
 
                 if(!saveFields[keyServerSettings]){
-                  saveFields[keyServerSettings] = {serverSettings : {...field.serverSettings}, data: [{field : field.value, value: this.editedItem[field.value]}] };
+                  saveFields[keyServerSettings] = {
+                    serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
+                    data: [{field : field.value, value: this.editedItem[field.value]}] };
                 }else{
 
                   saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
@@ -218,7 +225,7 @@
             return settings;
           });
 
-          console.log(requestData)
+
 
           // console.log(requestData);
           // this.$http.post(this.$http.CONNECTOR_URL, requestData )
@@ -233,11 +240,7 @@
           //   });
         },
       },
-      mounted() {
-        //console.log(2323123)
 
-        //console.log(this.fields)
-      },
       computed:{
       },
       watch:{
