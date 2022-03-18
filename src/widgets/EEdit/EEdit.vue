@@ -201,16 +201,17 @@
               if(field.serverSettings.item) keyServerSettings += field.serverSettings.item;
               if(field.serverSettings.setAction) keyServerSettings += field.serverSettings.setAction;
 
-              if(!saveFields[keyServerSettings]){
-                if(field.value && this.editedItem[field.value] !== undefined){
-                  if(!saveFields[keyServerSettings]){
-                    saveFields[keyServerSettings] = {serverSettings : {...field.serverSettings}, data: [{field : field.value, value: this.editedItem[field.value]}] };
-                  }else{
-                    saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
-                  }
+              if(field.value && this.editedItem[field.value] !== undefined){
 
+                if(!saveFields[keyServerSettings]){
+                  saveFields[keyServerSettings] = {serverSettings : {...field.serverSettings}, data: [{field : field.value, value: this.editedItem[field.value]}] };
+                }else{
+
+                  saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
                 }
+
               }
+
             }
           });
           requestData['save'] = this._.map(saveFields, (settings) => {
