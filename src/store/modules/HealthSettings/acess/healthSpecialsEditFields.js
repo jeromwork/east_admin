@@ -9,7 +9,7 @@ export default  {
             },
         iid : { data : {text: 'iid', value: 'iid',  },},
         services : { data : {text: 'Подключенные услуги', value: 'services',
-            serverSettings:{component:'health', item:'services', actionSave:'specials/set', getAction:'getVue', setAction:'set', getTags:'services/getVue'},
+            serverSettings:{component:'health', itemsName:'services', actionSave:'specials/set', setAction:'set', actionGet:'services/getVue', actionSet:'specials/set'},
             render:{type:'multiTags', col:{md:6}},},
         },
 

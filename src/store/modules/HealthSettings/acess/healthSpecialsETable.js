@@ -5,7 +5,7 @@ export default  {
         name : { data : {text: 'Название', value: 'name',},},
         iid : { data : {text: 'iid', value: 'iid',  },},
         services : { data : {text: 'Подключенные услуги', value: 'services',
-            serverSettings:{component:'health', item:'services', actionSave:'specials/set', getAction:'getVue', getTags:'services/getVue'},
+            serverSettings:{ component:'health', itemsName:'services', actionSave:'specials/set', actionGet:'services/getVue', actionSet:'specials/set' },
                 render:{type:'multiTags', },},},
         off : { data : {text: 'Отключен', value: 'off',
             serverSettings:{component:'health', actionSave:'specials/set', getAction:'getVue'},

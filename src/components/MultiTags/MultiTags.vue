@@ -41,6 +41,7 @@
   import store from "../../store";
   import MultiTags from '../../store/modules/MultiTags/MultiTags'
 
+
   export default {
 
         name: 'MultiTags',
@@ -85,67 +86,24 @@
             loading:false,
             disabled:false,
             search: null,
+            storeName:'',
+            defaultValues:[],
         }),
 
 
 
-        methods: {
 
-          onInput(val){
-            console.log(val)
-            // console.log(this.item[this.serverSettings.item])
-            // console.log(this.items)
-            // let inputItems = this._.map(this.items, (val) => {
-            //
-            //   if(val){return val}
-            // });
-            // console.log(inputItems)
-            this.$emit('input', val);
-
-          },
-            onOpen(){
-                console.log('onOpen')
-            },
-            async getItems(searchKey){
-                searchKey = (searchKey) ? searchKey : '';
-                //console.log(this.serverSettings)
-
-                let requestData = {
-                    // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
-                  action:  this.serverSettings.getTags,
-                    component:this.serverSettings.component,
-                    search:searchKey,
-                    requestOptions:{
-                        fields:(this.serverSettings.fields) ? this.serverSettings.fields : ['id', 'name'],
-
-                    },
-                };
-
-                this.$http.post(this.$http.CONNECTOR_URL, requestData )
-                    .then(response => {this.info = response
-                        if(!response.data || !response.data.items || !response.data.count)
-                        {
-                            console.log('Проверьте структуру данных Специальностей');
-                            return;
-                        }
-                        this.items = response.data.items;
-                                              return;
-
-                    });
-            },
-
-
-        },
         updated() {
             this.selected = this.tagsSelected;
-          console.log('updated')
+            console.log('updated')
         },
-      mounted() {
-        //console.log(this.editedItem)
+          mounted() {
+            //console.log(this.editedItem)
 
-        //console.log(this.fields)
-        console.log('mounted')
-      },
+            console.log('mounted')
+
+              this.$store.dispatch(`${this.storeName}/GET_INFO_ISSET_VALUES`);
+          },
 
         created(){
           //при создании ВСЕХ multiTags собираются все Ids и сохраняются в объект в Store.
@@ -153,41 +111,9 @@
           //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
           //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
 
-          if(!store.hasModule('MultiTags')){
-            store.registerModule('MultiTags', {
-              ...MultiTags,
-            });
-          }
+            this.initStoreModule();
 
-
-          this.$store.commit('MultiTags/SET_IDS', {itemType:this.serverSettings.component + '_' +this.serverSettings.item, values:this.value});
-
-          console.log('created')
-          //console.log(this.item[this.serverSettings.item])
-
-            if(this.item && this.item[this.serverSettings.item]){
-                //this.value = this.item[this.serverSettings.item];
-              this.items = this._.values(this.item[this.serverSettings.item])
-              return;
-                // let defaultValues = this._.values(this.item[this.serverSettings.item])
-                // this.values = this._.map(defaultValues, function(item) {
-                //     console.log(item)
-                //     let adapterItem = {};
-                //     if(item.title){
-                //         adapterItem.name = item.title;
-                //     }else if(item.name){
-                //         adapterItem.name = item.name;
-                //     }
-                //     adapterItem.id = item.id+'';
-                //     if(!adapterItem.name){
-                //         throw new Error('Неправильный адаптер, невозможно распарсить значения')
-                //     }
-                //     return adapterItem;
-                // });
-                //
-                // this.items = this.values;
-            }
-
+          this.$store.commit(`${this.storeName}/SET_IDS`, this.getValues());
         },
         watch: {
             search(val) {
@@ -206,8 +132,81 @@
 
         },
         computed:{
+            getItems2:{
+                get(){
+                    return this.$store.getters[`${this.storeName}/getItems`]({values:this.getValues()});
+                },
+            },
+        },
+      methods: {
+            getValues(){
+                if(this.item && this.item[this.serverSettings.itemsName]){
+                    return this.item[this.serverSettings.itemsName];
+                }
+                return [];
+            },
+          initStoreModule(){
+              //при запуске компонента, создается новый vuex модуль, с уникальным именем
+              //соответственно мутации и комиты будут через это уникальное имя модуля
+              this.storeName = `MultiTags_${this.serverSettings.itemsName}`;
+              if(!store.hasModule(this.storeName)){
+                  store.registerModule(this.storeName, {
+                      ...MultiTags,
+                      component: this.serverSettings.component,
+                      namespaced: true,
+                  });
+              }
+              this.$store.commit(this.storeName + '/SET_STORE_OPTIONS', {
+                  itemsName:this.serverSettings.itemsName,
+                  storeName:this.storeName,
+                  actionGet:this.serverSettings.actionGet,
+                  component:this.serverSettings.component,
+              });
 
-        }
+          },
+          onInput(val){
+              this.$emit('input', val);
+          },
+          onOpen(){
+              console.log('onOpen')
+          },
+          async getItems(searchKey){
+              searchKey = (searchKey) ? searchKey : '';
+              //console.log(this.serverSettings)
+
+              this.getItems2();
+              let requestData = {
+                  // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
+                  action:  this.serverSettings.getTags,
+                  component:this.serverSettings.component,
+                  search:searchKey,
+                  requestOptions:{
+                      fields:(this.serverSettings.fields) ? this.serverSettings.fields : ['id', 'name'],
+
+                  },
+              };
+
+              this.$http.post(this.$http.CONNECTOR_URL, requestData )
+                  .then(response => {this.info = response
+                      if(!response.data || !response.data.items || !response.data.count)
+                      {
+                          console.log('Проверьте структуру данных Специальностей');
+                          return;
+                      }
+                      this.items = response.data.items;
+                      return;
+
+                  });
+          },
+          getItemType(){
+                if(!this.serverSettings.itemsName || !this.serverSettings.component){
+                    throw new Error('Неправильные настройки serverSettings для виджета MultiTags. Нет itemName или component')
+                }
+              return this.serverSettings.component + '_' +this.serverSettings.itemsName;
+          },
+
+
+      },
 
 
     }
