@@ -6,10 +6,10 @@
             outlined
             small-chips
             :loading="loading"
-            :value="getValues"
+            v-model="value"
+            :items="items"
 
             :disabled="disabled"
-            :items="items"
             @focus="getItems"
             :deletable-chips="true"
             :auto-select-first="true"
@@ -24,7 +24,6 @@
             :cache-items="true"
             @input="onInput"
     ></v-autocomplete>
-
 
 </template>
 
@@ -79,7 +78,7 @@
         data: () => ({
             //value:[],
             values: {},
-            items: [],
+            //items: [],
             select:[],
             info:{},
             searchInput:null,
@@ -95,11 +94,11 @@
 
 
         updated() {
-            this.selected = this.tagsSelected;
-            console.log('updated')
+           // this.selected = this.tagsSelected;
+
         },
           mounted() {
-              this.$store.dispatch(`${this.storeName}/GET_INFO_ISSET_VALUES`);
+              this.$store.dispatch(`${this.storeName}/getInfoIssetValues`);
           },
 
         created(){
@@ -132,25 +131,16 @@
 
         },
         computed:{
-            issetValues:{
-                get(){
-                    let filledValues =  this.$store.getters[`${this.storeName}/getItems`];
-
-                    // console.log(this.value)
-                   // console.log({...filledValues});
-                    console.log(this.values)
-                    console.log(filledValues)
-                    // return [{id:1, name:'sfdw3333e'}]
-                    // return this.values
-                    // return {...filledValues};
-                     return filledValues;
-                    // return this.$store.getters[`${this.storeName}/getItems`]({values:this.getValues()});
-                },
-            },
+          items : {
+            get(){
+              return this.$store.getters[`${this.storeName}/getItems`]
+            }
+          },
             getValues(){
                 if(this.item && this.item[this.serverSettings.itemsName]){
                     return this.item[this.serverSettings.itemsName];
                 }
+
                 return [];
             },
         },
@@ -181,32 +171,8 @@
           onOpen(){
               console.log('onOpen')
           },
-          async getItems(searchKey){
-              searchKey = (searchKey) ? searchKey : '';
-              //console.log(this.serverSettings)
-
-              let requestData = {
-                  // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
-                  action:  this.serverSettings.actionGet,
-                  component:this.serverSettings.component,
-                  search:searchKey,
-                  requestOptions:{
-                      fields:(this.serverSettings.fields) ? this.serverSettings.fields : ['id', 'name'],
-
-                  },
-              };
-
-              this.$http.post(this.$http.CONNECTOR_URL, requestData )
-                  .then(response => {this.info = response
-                      if(!response.data || !response.data.items || !response.data.count)
-                      {
-                          console.log('Проверьте структуру данных Специальностей');
-                          return;
-                      }
-                      this.items = response.data.items;
-                      return;
-
-                  });
+          getItems(searchKey){
+            this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey});
           },
           getItemType(){
                 if(!this.serverSettings.itemsName || !this.serverSettings.component){

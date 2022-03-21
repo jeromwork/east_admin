@@ -62,7 +62,6 @@
                   <multi-tags
                     v-if="field.render.type == 'multiTags'"
                     v-model="editedItem[field.value]"
-                    :value="editedItem[field.value]"
                     :key="field.value"
                     :item="item"
                     :field="field.value"
