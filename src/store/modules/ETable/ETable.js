@@ -27,6 +27,7 @@ export default {
             state.requestOptions = options;
         },
         FILL_ITEMS(state, items){
+            console.log('FILL_ITEMSETABLE')
             state.Items = items;
         },
         SET_TOTAL_COUNT_ITEMS(state, count){
@@ -71,6 +72,7 @@ export default {
     },
     getters: {
         getItems : state => {
+            console.log('etablegetItems')
             return state.Items;
         },
         getTotalCountItems :state => {

@@ -6,7 +6,8 @@
             outlined
             small-chips
             :loading="loading"
-            :value="value"
+            :value="getValues"
+
             :disabled="disabled"
             :items="items"
             @focus="getItems"
@@ -52,7 +53,7 @@
             tag:{
                 type: String,
             },
-            value:{type: Array,},
+            value:{type: Array},
             serverSettings:{
                 component : {type:String, required: true},
                 item: {type:String, required: true},
@@ -77,7 +78,7 @@
         },
         data: () => ({
             //value:[],
-            values: [],
+            values: {},
             items: [],
             select:[],
             info:{},
@@ -98,10 +99,6 @@
             console.log('updated')
         },
           mounted() {
-            //console.log(this.editedItem)
-
-            console.log('mounted')
-
               this.$store.dispatch(`${this.storeName}/GET_INFO_ISSET_VALUES`);
           },
 
@@ -110,11 +107,14 @@
           //в mounted идет обращение на сервер, что бы выдали title тэгов по их ids.
           //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
           //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
-
             this.initStoreModule();
+            //console.log('created')
 
-          this.$store.commit(`${this.storeName}/SET_IDS`, this.getValues());
+          this.$store.commit(`${this.storeName}/SET_IDS`, this.getValues);
+
         },
+
+
         watch: {
             search(val) {
                 this.getItems(val);
@@ -132,19 +132,30 @@
 
         },
         computed:{
-            getItems2:{
+            issetValues:{
                 get(){
-                    return this.$store.getters[`${this.storeName}/getItems`]({values:this.getValues()});
+                    let filledValues =  this.$store.getters[`${this.storeName}/getItems`];
+
+                    // console.log(this.value)
+                   // console.log({...filledValues});
+                    console.log(this.values)
+                    console.log(filledValues)
+                    // return [{id:1, name:'sfdw3333e'}]
+                    // return this.values
+                    // return {...filledValues};
+                     return filledValues;
+                    // return this.$store.getters[`${this.storeName}/getItems`]({values:this.getValues()});
                 },
             },
-        },
-      methods: {
             getValues(){
                 if(this.item && this.item[this.serverSettings.itemsName]){
                     return this.item[this.serverSettings.itemsName];
                 }
                 return [];
             },
+        },
+      methods: {
+
           initStoreModule(){
               //при запуске компонента, создается новый vuex модуль, с уникальным именем
               //соответственно мутации и комиты будут через это уникальное имя модуля
@@ -174,10 +185,9 @@
               searchKey = (searchKey) ? searchKey : '';
               //console.log(this.serverSettings)
 
-              this.getItems2();
               let requestData = {
                   // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
-                  action:  this.serverSettings.getTags,
+                  action:  this.serverSettings.actionGet,
                   component:this.serverSettings.component,
                   search:searchKey,
                   requestOptions:{
@@ -204,7 +214,6 @@
                 }
               return this.serverSettings.component + '_' +this.serverSettings.itemsName;
           },
-
 
       },
 
