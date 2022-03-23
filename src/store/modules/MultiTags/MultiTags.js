@@ -60,26 +60,6 @@ export default {
       }
       this.dispatch(`${state.storeName}/getItemsFromServer`, {ids:state.ids});
       state.ids = {};
-      // let requestData = {
-      //   action:  state.serverSettings.actionGet,
-      //   component:state.serverSettings.component,
-      //   //limit:state.requestOptions.itemsPerPage,
-      //   //offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
-      //   requestOptions:state.requestOptions,
-      //   ids:state.ids
-      // };
-      // state.ids = {};
-      // this.$http.post(this.$http.CONNECTOR_URL, requestData )
-      //     .then(response => {this.info = response
-      //       if(!response.data || !response.data.items || !response.data.count)
-      //       {
-      //         console.log('Проверьте структуру данных Специальностей');
-      //         return;
-      //       }
-      //       //console.log(response.data.items)
-      //        this.commit(state.storeName + '/FILL_ITEMS', response.data.items);
-      //     });
-
     },
     async getItemsFromServer({state}, data){
 
@@ -111,7 +91,7 @@ export default {
 
   getters: {
     getItems: (state )  => {
-      console.log(state.items)
+      //console.log(state.items)
       return state.items;
 
 

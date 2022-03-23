@@ -8,12 +8,17 @@
                item-key="id"
                @editItem="editItem"
                :fields="eTableFields"
+
+               :refreshItems="refreshItems"
+                @refreshedItems="refreshItems=[]"
        ></e-table>
 
 
       <div>
         <e-edit :toogle="showEditDialog"
                 @close="showEditDialog=false"
+                @save="savedItemUpdateDataTable"
+
                 :fields="eEditFields"
                 :item="currentEditItem"
                 :serverSettings="{component : 'health', itemType : 'specials', action : 'setVue'}"
@@ -48,7 +53,7 @@
           showEditDialog:false,
           currentEditItem : {},
 
-
+        refreshItems:[],
 
         }),
 
@@ -56,7 +61,13 @@
           editItem(e, item){
             this.showEditDialog = true
             this.currentEditItem = item;
-          }
+          },
+            savedItemUpdateDataTable(e, id){
+                //this.showEditDialog=false;
+                console.log(id)
+                //после сохранения сущности, обновляем с сервера только одну эту сущность
+                this.refreshItems = [id];
+            }
         },
 
         created(){

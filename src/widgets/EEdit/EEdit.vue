@@ -20,7 +20,7 @@
             <v-btn
               icon
               dark
-              @click="$emit('close')"
+              @click="Close"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -50,7 +50,6 @@
                   :md="field.render.col.md"
                   v-for="(field, index) in row" :key="index"
                 >
-
                   <v-text-field
                     v-if="field.render.type==='text'"
                     v-model="editedItem[field.value]"
@@ -63,18 +62,18 @@
                     v-if="field.render.type == 'multiTags'"
                     v-model="editedItem[field.value]"
                     :key="field.value"
-                    :item="item"
+
                     :field="field.value"
                     :serverSettings="field.serverSettings"
                     :fieldSettins="field"
                     :label="field.text"
-                    @input="minput"
                   ></multi-tags>
 
                   <v-checkbox
                     v-if="field.render.type == 'checkbox'"
                     v-model="editedItem[field.value]"
-                    :input-value="field.value"
+                    true-value="1"
+                    false-value="0"
                     :label="field.text"
                   ></v-checkbox>
 
@@ -134,6 +133,9 @@
 
 
         },
+      created() {
+
+      },
         data:() => {
           return {
             dialog: false,
@@ -144,6 +146,7 @@
             sound: true,
             widgets: false,
             editedItem:{},
+            editedItemJSON : '',
 
 
             valid: false,
@@ -163,69 +166,46 @@
             lastMessageFromServer:'',
           }
         },
+
       methods:{
-        minput(val){
+          Close(){
+            if(JSON.stringify(this.editedItem) !== this.editedItemJSON){//если данные были изменены,
+              if(confirm('Выйти без сохранения?')) {//нужно предложить их сохранить, либо выйти без сохранения
+                this.editedItem = JSON.parse(this.editedItemJSON);
+                this.$emit('close');
+              }
+            }else{
+              this.editedItem = JSON.parse(this.editedItemJSON);
+              this.$emit('close');
+            }
+          },
+          save(e){
 
-          // console.log(this.editedItem)
-          console.log(val)
-        },
-        save(){
-
-          console.log(this.serverSettings)
           this.lastMessageFromServer = 'Сохранение прошло успешно!';
           this.$emit('close');
+
+
           this.saveSuccess = true
           if(!this.item.id){
             throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
           }
+            this.$emit('save', e, this.item.id);
 
-           // let data = {};
-
-
-          // data[this.field] = + value;
           let requestData = {
             action: this.serverSettings.actionSave,
             component: this.serverSettings.component,
             id:this.item.id,
-            //data,
           };
 
-
-          console.log(requestData)
-          console.log(this.fields)
-          console.log(this.editedItem)
 
           //обходим настройки полей.
           //если видем у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
           //если настройки уже были, значит добавляем данные для сохранения
           //отправляем данные для сохранения, только в том случае, если для такого поля была настройка рендеринга
 
-          let saveFields = {};
-            this._.map(this.fields, (field) => {
-            if(field.serverSettings && field.serverSettings){
-              let keyServerSettings = '';
-              if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
-              if(field.serverSettings.actionSave) keyServerSettings += field.serverSettings.setAction;
+            requestData['save'] = this.getSaveData(this.fields);
 
-              if(field.value && this.editedItem[field.value] !== undefined){
-
-                if(!saveFields[keyServerSettings]){
-                  saveFields[keyServerSettings] = {
-                    serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
-                    data: [{field : field.value, value: this.editedItem[field.value]}] };
-                }else{
-
-                  saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
-                }
-
-              }
-
-            }
-          });
-          requestData['save'] = this._.map(saveFields, (settings) => {
-            return settings;
-          });
-
+            console.log(requestData)
 
 
           // console.log(requestData);
@@ -240,51 +220,71 @@
           //
           //   });
         },
+        getSaveData(fields){
+          let saveFields = {};
+          this._.map(fields, (field) => {
+            if(field.serverSettings && field.serverSettings){
+              let keyServerSettings = '';
+              if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
+              if(field.serverSettings.actionSave) keyServerSettings += field.serverSettings.setAction;
+
+              if(field.value && this.editedItem[field.value] !== undefined){
+                if(!saveFields[keyServerSettings]){
+                  saveFields[keyServerSettings] = {
+                    serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
+                    data: [{field : field.value, value: this.editedItem[field.value]}] };
+                }else{
+                  saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
+                }
+              }
+            }
+          });
+          return this._.values(saveFields);
+        },
+
       },
 
       computed:{
       },
       watch:{
         item(item){
-          console.log(item)
           this.editedItem = {...item};
+          this.editedItemJSON = JSON.stringify(this.editedItem)
         },
 
         fields(fields){
-          let cols = 12;
-          this.mapRowsCols.push([]);//сразу добавляем строку
+          console.log(fields)
+
+          this.mapRowsCols = {};
+
+
+
+          //let cols = 12;
+          //this.mapRowsCols.push([]);//сразу добавляем строку
           this._.map(fields, (field) => {
-            if(field.render && field.render.col){
-              let lastIndexRowsArray = (this.mapRowsCols.length - 1 < 0 ) ? 0 : this.mapRowsCols.length - 1;
-              cols -= field.render.col;
-              if( cols  === 0 ) {
-                this.mapRowsCols[lastIndexRowsArray].push(field);
-                this.mapRowsCols.push([]);
-                cols = 12;
-              }else if (cols < 0){
-                this.mapRowsCols.push([field]);
-                cols = 12;
+            //let currentNumberRow = Object.keys(this.mapRowsCols).length;
+            if(field.render && field.render.rowNumber){
+              if(!this.mapRowsCols[field.render.rowNumber]){
+                this.mapRowsCols[field.render.rowNumber] = [];
               }
-              else {
-                if(this.mapRowsCols.length - 1 > -1){
-                  this.mapRowsCols[lastIndexRowsArray].push(field);
-                }
-              }
+              this.mapRowsCols[field.render.rowNumber].push(field);
+
+              //currentNumberRow = field.render.rowNumber;
+
             }
           });
+          this.mapRowsCols = this._.values(this.mapRowsCols);
+          console.log(this.mapRowsCols)
           if(this.mapRowsCols[0].length === 0){//если не нашли ни одного поля для рендерингка
             this.mapRowsCols = [];//тогда вообще ничего не надо рендерить
           }
         },
+
         toogle(toogle){
-          console.log('toogle')
           if(toogle !== this.dialog){
             this.dialog = toogle;
           }
-
-            console.log(this.dialog)
-          console.log(toogle)
-          },
+        },
 
       }
     }

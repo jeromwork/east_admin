@@ -21,7 +21,6 @@
                 v-model="item[header.serverSettings.itemsName]"
 
                 :key="header.value"
-                :item="item"
                 :field="header.value"
                 :serverSettings="header.serverSettings"
                 :fieldSettins="header"
@@ -88,6 +87,8 @@
 
           },
           fields:{type:Array, required: true},
+          refreshItems:{type:Array},
+
         },
         data: function () {return {
           storeName: '',
@@ -128,6 +129,8 @@
         }
       },
       computed:{
+
+
         items:{
           get(){
             return this.$store.getters[this.storeName + "/getItems"];
@@ -168,12 +171,29 @@
             return this.$store.getters[this.storeName + "/getTotalCountItems"];
           },
         },
+        refreshedItems:{
+          get(){
+            if(this.$store.getters[this.storeName + "/getRefreshedItems"].length === 0){
+              this.$emit('refreshedItems');
+            }
+            return this.$store.getters[this.storeName + "/getRefreshedItems"];
+          },
+        },
+
 
 
 
 
       },
-
+    watch:{
+      fields(){
+        console.log(this.fields)
+      },
+      refreshItems(){
+        this.$store.commit(this.storeName + '/SET_REFRESH_ITEMS', this.refreshItems);
+        this.$store.dispatch(this.storeName + '/GET_ITEMS');
+      },
+    },
 
     }
 </script>

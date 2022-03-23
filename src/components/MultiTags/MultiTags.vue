@@ -6,7 +6,7 @@
             outlined
             small-chips
             :loading="loading"
-            v-model="value"
+            v-model="model"
             :items="items"
 
             :disabled="disabled"
@@ -61,10 +61,7 @@
                 fields:{type:Array, },
               required:true,
             },
-            item:{
-                type: Object,
-                required:true,
-            },
+
           fieldSettins:{
             type: Object,
             required:true,
@@ -90,16 +87,9 @@
             defaultValues:[],
         }),
 
-
-
-
-        updated() {
-           // this.selected = this.tagsSelected;
-
-        },
-          mounted() {
-              this.$store.dispatch(`${this.storeName}/getInfoIssetValues`);
-          },
+      mounted() {
+          this.$store.dispatch(`${this.storeName}/getInfoIssetValues`);
+      },
 
         created(){
           //при создании ВСЕХ multiTags собираются все Ids и сохраняются в объект в Store.
@@ -109,7 +99,7 @@
             this.initStoreModule();
             //console.log('created')
 
-          this.$store.commit(`${this.storeName}/SET_IDS`, this.getValues);
+          this.$store.commit(`${this.storeName}/SET_IDS`, this.model);
 
         },
 
@@ -136,12 +126,13 @@
               return this.$store.getters[`${this.storeName}/getItems`]
             }
           },
-            getValues(){
-                if(this.item && this.item[this.serverSettings.itemsName]){
-                    return this.item[this.serverSettings.itemsName];
-                }
-
-                return [];
+            model: {
+                get() {
+                    return this.value;
+                },
+                set(value) {
+                    this.$emit('input', value);
+                },
             },
         },
       methods: {
