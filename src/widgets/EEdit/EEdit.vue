@@ -181,7 +181,7 @@
           },
           save(e){
 
-          this.lastMessageFromServer = 'Сохранение прошло успешно!';
+
           this.$emit('close');
 
 
@@ -189,7 +189,7 @@
           if(!this.item.id){
             throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
           }
-            this.$emit('save', e, this.item.id);
+
 
           let requestData = {
             action: this.serverSettings.actionSave,
@@ -197,6 +197,7 @@
             id:this.item.id,
           };
 
+            console.log(this.serverSettings)
 
           //обходим настройки полей.
           //если видем у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
@@ -208,17 +209,19 @@
             console.log(requestData)
 
 
-          // console.log(requestData);
-          // this.$http.post(this.$http.CONNECTOR_URL, requestData )
-          //   .then(response => {
-          //     this.info = response
-          //     if(!response.data || !response.data.items || !response.data.count)
-          //     {
-          //       console.log('Проверьте структуру данных Специальностей');
-          //       return;
-          //     }
-          //
-          //   });
+          console.log(requestData);
+          this.$http.post(this.$http.CONNECTOR_URL, requestData )
+            .then(response => {
+              this.info = response
+              if(response.data && response.data.ok){
+                this.lastMessageFromServer = 'Сохранение прошло успешно!';
+                this.$emit('save', e, this.item.id);
+              }else{
+                console.log('Проверьте структуру данных Специальностей');
+                return;
+              }
+
+            });
         },
         getSaveData(fields){
           let saveFields = {};

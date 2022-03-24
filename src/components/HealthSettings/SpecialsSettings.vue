@@ -21,7 +21,7 @@
 
                 :fields="eEditFields"
                 :item="currentEditItem"
-                :serverSettings="{component : 'health', itemType : 'specials', action : 'setVue'}"
+                :serverSettings="{component : 'health', itemType : 'specials', actionSave : 'setVue'}"
         >
         </e-edit>
       </div>
