@@ -47,9 +47,9 @@ const Access = {
 
 
             this.$http
-                .post('remote/connector.php', { action:  'getAccessRules', component:'Access'  })
+                .post('api/get-access-rules', { action:  'getAccessRules', component:'Access'  })
                 .then(response => {this.info = response
-                    //console.log(response.data);
+                    console.log(response.data);
                     if(response.data && response.data.ok === false){
                         return;
                     }
