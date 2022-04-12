@@ -64,7 +64,7 @@
 
     import { mapGetters , mapMutations , mapState} from "vuex";
 
-    import ETable from "../../vidgets/ETable/ETable";
+    import ETable from "../../widgets/ETable/ETable";
     export default {
 
 

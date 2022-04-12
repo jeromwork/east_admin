@@ -33,6 +33,16 @@
                                         label="Имя"
                                         @change="setToAccess"
                                 ></v-text-field>
+
+                              <MultiTags
+                                action="specials/get"
+                                connector="iservices"
+                                placeholder="Специальности доктора (из инфоклиники)22"
+                                :include_fields="{iss_sp__id:'value', iss_sp__name:'text'}"
+                                @change-tags="SET_TAGS($event, ['iservices', 'doctors', 'iss_specials'])"
+                                :tagsSelected="tags('iservices', 'doctors', 'iss_specials' )"
+
+                              ></MultiTags>
                             </v-col>
                         </v-row>
                     </v-form>

@@ -33,8 +33,11 @@ const Access = {
         },
         SET_SOCKET_DATA(state, response) {
             state.socketData = JSON.parse(response.data);
-            console.log(this)
         },
+        PREPARE_ACCESS_RULES(state){
+            console.log(state)
+
+        }
     },
 //=============================================================
     actions:{
@@ -71,6 +74,11 @@ const Access = {
     getters: {
         access: state => (component) =>{
             return state.accessData[component];      },
+
+        getRawAccessList : state => (name) =>{
+            return state.accessData[name];
+            },
+
     },
 
 }

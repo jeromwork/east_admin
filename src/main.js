@@ -5,6 +5,8 @@ import vuetify from './plugins/vuetify' // path to vuetify export
 //import VueRouter from 'vue-router'
 import router from './router'
 import Axios from 'axios'
+import _ from 'lodash';
+Object.defineProperty(Vue.prototype, '_', { value: _ });
 
 
 Vue.config.productionTip = false
@@ -18,12 +20,13 @@ const $axios = Axios.create({
 if (localStorage.getItem('jwt')) {
   $axios.defaults.headers.common['jwt'] = localStorage.getItem('jwt');
 }
-$axios.defaults.baseURL =  (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/': 'http://dev.eastclinic.local/assets/components/eastclinic/';
+$axios.defaults.baseURL =  (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/': 'http://dev-j.eastclinic.local/assets/components/eastclinic/';
 $axios.defaults.method ="POST";
+$axios.CONNECTOR_URL = 'remote/connector.php';
 
 store.$http = $axios;
 
-Vue.prototype.$http = Axios;
+Vue.prototype.$http = $axios;
 
 new Vue({
   store,

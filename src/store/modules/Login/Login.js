@@ -58,9 +58,8 @@ export default {
                 //'jwt': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCIsImlhdCI6MTYyNDI4MDEyNCwiZXhwIjoxNjI0MjgzNzI0LCJhdWQiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCJ9.Vj98Suqo18jw7IOlEzITMOQ1x39WL9_53UrCgTDlROw5bF2IwNEjmK0d_Fyu1JCgEgKTs4qFpUepA8kpxeQD3g',
             };
             this.$http
-                .post('remote/connector.php', qdata)
+                .post(this.$http.CONNECTOR_URL, qdata)
                 .then(response => {this.info = response
-
                     //console.log(response.data);
                     if(response.data && response.data.ok === false){
                         loginData.handError(response.data.message, loginData.ths);

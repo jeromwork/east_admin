@@ -6,6 +6,7 @@ import DoctorSettings from '@/components/DoctorSettings/DoctorSettings'
 import DocSelectSettings from '@/components/DocSelect/DocSelectSettings/DocSelectSettings'
 import DocSelect from '@/components/DocSelect/DocSelectUse/DocSelect'
 import FilialSettings from '@/components/FilialSettings/FilialSettings'
+import HealthSettings from "../components/HealthSettings/HealthSettings";
 import store from '@/store'
 
 
@@ -56,6 +57,14 @@ const router = new VueRouter({
                 requiresAuth: true,
             },
         },
+
+      {
+        path: '/health-settings',
+        component: HealthSettings,
+        meta: {
+          requiresAuth: true,
+        },
+      },
     ],
 });
 
@@ -67,7 +76,7 @@ router.beforeEach((to, from, next) => {
 
         if (isAuthenticated()) {
             //здесь же проверка на доступ к компоненту
-            console.log(store.getters["Login/currentUserGroup"])
+            //console.log(store.getters["Login/currentUserGroup"])
 
             next();
         } else {
