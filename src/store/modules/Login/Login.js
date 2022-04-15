@@ -1,4 +1,5 @@
 import router from '@/router'
+import _ from 'lodash'
 
 export default {
     namespaced:true,
@@ -17,7 +18,10 @@ export default {
         userAnonim:true,
         user_groups:[],
         iservices_connector_url:(window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/login/connector.php': 'http://dev.eastclinic.local/assets/components/eastclinic/login/connector.php',
-
+      serverErrors:{email:'',
+                    password:'',
+                    name:'',
+                    },
     },
 //===========================================================
 
@@ -37,47 +41,95 @@ export default {
             this.dispatch('Login/enterToSystem',loginData);
         },
         DOLOGOUT(state) {
-            localStorage.removeItem('jwt');
+            // localStorage.removeItem('jwt');
+            localStorage.removeItem('access_token');
             state.userAnonim = true;
             router.push('/');
         },
+      SET_ACCESS_TOKEN(state, token){
+        console.log(token)
+        localStorage.setItem('access_token', token);
+        state.userAnonim = false;
+      },
+      SET_SERVER_ERRORS(state, errors){
+        errors = (!errors) ? {} : errors;
+        let updatedErrors = {};
+
+
+        _.forEach(state.serverErrors, (errorMessage, field) => {
+          if(errors[field]){
+            updatedErrors[field] = errors[field].join(', ');
+          }else{
+            updatedErrors[field] = '';
+          }
+        })
+        state.serverErrors = updatedErrors;
+      },
 
     },
 //=============================================================
     actions:{
-        async enterToSystem({state}, loginData){
-            //console.log(loginData);
+        async enterToSystem({state}, formData){
             let qdata = {
-                action:  'login/login',
-                username : loginData.login,
-                component:'login',
-                //'username': 'Ivanov_callcenter',
-                password: loginData.password,
+              ...formData,
+
                 'rememberme': 1,
-                'login_context': 'web',
-                //'jwt': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCIsImlhdCI6MTYyNDI4MDEyNCwiZXhwIjoxNjI0MjgzNzI0LCJhdWQiOiJkZXYuZWFzdGNsaW5pYy5sb2NhbCJ9.Vj98Suqo18jw7IOlEzITMOQ1x39WL9_53UrCgTDlROw5bF2IwNEjmK0d_Fyu1JCgEgKTs4qFpUepA8kpxeQD3g',
-            };
+             };
+          console.log(state)
             this.$http
-                .post(this.$http.CONNECTOR_URL, qdata)
-                .then(response => {this.info = response
-                    //console.log(response.data);
-                    if(response.data && response.data.ok === false){
-                        loginData.handError(response.data.message, loginData.ths);
-                        return;
-                    }else if(response.data && response.data.ok === true){
-                        loginData.handOk(loginData.ths);
-                        if(response.data.jwt){
-                            localStorage.setItem('jwt', response.data.jwt);
-                            //this.commit('JWT/SETTOKEN', response.data.jwt);
-                        }
-                        state.userAnonim = false;
-
-                    }
+                .post('api/auth/login', qdata)
+                .then(response => {
+                  this.info = response
+                  if(response.data && response.data.access_token){
+                    this.commit('Login/SET_ACCESS_TOKEN', response.data.access_token);
+                  }
+                }).catch( (error) => {
+                  if(error.response.status === 422 && error.response.data){//ошибка заполнения полей
+                    this.commit('Login/SET_SERVER_ERRORS', error.response.data);
+                  }
 
 
-                    //
-                }).catch(error => console.log(error+'error'));
+                });
         },
+        async registerInSystem({state}, formData){
+
+          let qdata = {
+            ...formData,
+            'rememberme': 1,
+             };
+
+          console.log(formData)
+          console.log(qdata)
+
+          console.log(state)
+
+          this.$http
+            .post('api/auth/register', qdata)
+            .then(
+
+              response => {
+                console.log(response);
+              // this.info = response
+              // if(response.data && response.data.ok === false){
+              //   loginData.handError(response.data.message, loginData.ths);
+              //   return;
+              // }else if(response.data && response.data.ok === true){
+              //   loginData.handOk(loginData.ths);
+              //   if(response.data.jwt){
+              //     localStorage.setItem('jwt', response.data.jwt);
+              //     //this.commit('JWT/SETTOKEN', response.data.jwt);
+              //   }
+              //   state.userAnonim = false;
+              // }
+
+            }
+            ).catch(error => console.log(error));
+
+
+
+        },
+
+
         async getUserData(){
 
             let qdata = {
@@ -91,7 +143,7 @@ export default {
             };
             // console.log(state);
             this.$http
-                .post('remote/connector.php', qdata)
+                .get('api/user-profile', qdata)
                 .then(response => {this.info = response
 
                     //console.log(response.data);
@@ -108,7 +160,7 @@ export default {
     getters: {
         isAnonim: state => {        return state.userAnonim;      },
         currentUserGroup: state => {     return state.current_user_group;        },
-
+        getServerErrors: state => {return state.serverErrors;   }
 
     },
 

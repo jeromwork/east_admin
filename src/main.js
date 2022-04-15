@@ -20,7 +20,15 @@ const $axios = Axios.create({
 if (localStorage.getItem('jwt')) {
   $axios.defaults.headers.common['jwt'] = localStorage.getItem('jwt');
 }
-$axios.defaults.baseURL =  (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/': 'http://dev-j.eastclinic.local/assets/components/eastclinic/';
+if(localStorage.getItem('access_token')){
+  $axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+}
+
+
+
+// $axios.defaults.baseURL =  (window.location.host === 'http://localhost:8080/')? '/assets/components/eastclinic/': 'http://dev-j.eastclinic.local/assets/components/eastclinic/';
+$axios.defaults.baseURL =  'http://127.0.0.1:8000/';
+
 $axios.defaults.method ="POST";
 $axios.CONNECTOR_URL = 'remote/connector.php';
 

@@ -41,20 +41,16 @@ const Access = {
     },
 //=============================================================
     actions:{
-        async getAccessData({getters, state}){
-            console.log(state)
-            console.log(getters)
-
-
+        async getAccessData(){
             this.$http
-                .post('remote/connector.php', { action:  'getAccessRules', component:'Access'  })
+                .post('api/get-access-rules', )
                 .then(response => {this.info = response
-                    //console.log(response.data);
+                    console.log(response.data);
                     if(response.data && response.data.ok === false){
                         return;
                     }
 
-                    this.commit('Access/SET_ACCESS_DATA', response.data.data);
+                    this.commit('Access/SET_ACCESS_DATA', response.data);
                     //
                 }).catch(error => console.log(error+'error'));
         },
