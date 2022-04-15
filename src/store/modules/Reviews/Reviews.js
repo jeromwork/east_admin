@@ -15,10 +15,11 @@ export default {
     page:1,
     countOfPage:10,
     requestOptions:{page:1, itemsPerPage:10},
+    reviews:[],
   },
   mutations:{
-    FILL_SPECIALS(state, specials){
-      state.specials = specials;
+    FILL_REVIEWS(state, reviews){
+      state.reviews = {...reviews};
     },
     SET_OPTIONS(state, options){
       console.log(options)
@@ -39,7 +40,7 @@ export default {
     },
   },
   actions:{
-    async GET_SPECIALS({state}){
+    async getReviews({state}){
 
       let requestData = {
         action:  'specials/getVue',
@@ -50,7 +51,7 @@ export default {
       };
 
 
-      this.$http.post(this.$http.CONNECTOR_URL, requestData )
+      this.$http.get('api/reviews', requestData )
         .then(response => {this.info = response
           if(!response.data || !response.data.items || !response.data.count)
           {
@@ -58,8 +59,8 @@ export default {
             return;
           }
 
-          this.commit('SpecialsSettings/FILL_SPECIALS', response.data.items);
-          this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
+          this.commit('SpecialsSettings/FILL_REVIEWS', response.data.items);
+          this.commit('SpecialsSettings/SET_TOTAL_COUNT_REVIEWS', response.data.count);
         });
     },
   },
@@ -69,23 +70,23 @@ export default {
     //   return state.specials;
     // },
     //
-    // getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
-    //   let headerItems = [];
-    //   let accessItems = rootGetters['Access/access']('healthSpecialsSettings');
-    //   if(accessItems && ETableFieldsSettings && ETableFieldsSettings['healthSpecialsSettings']){
-    //     let healthSpecialsETable = ETableFieldsSettings['healthSpecialsSettings'];
-    //     for (let id in healthSpecialsETable ){
-    //       if(accessItems[id] && healthSpecialsETable[id]['data']){
-    //         headerItems.push(healthSpecialsETable[id]['data'])
-    //       }
-    //     }
-    //
-    //     if(headerItems.length === 0){
-    //       //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
-    //     }
-    //   }
-    //   return headerItems;
-    // },
+    getTableHeadItems: (state, getters,rootState, rootGetters) =>  {
+      let headerItems = [];
+      let accessItems = rootGetters['EditFields/access']('ReviewsSettings');
+      if(accessItems && ETableFieldsSettings && ETableFieldsSettings['healthSpecialsSettings']){
+        let healthSpecialsETable = ETableFieldsSettings['healthSpecialsSettings'];
+        for (let id in healthSpecialsETable ){
+          if(accessItems[id] && healthSpecialsETable[id]['data']){
+            headerItems.push(healthSpecialsETable[id]['data'])
+          }
+        }
+
+        if(headerItems.length === 0){
+          //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
+        }
+      }
+      return headerItems;
+    },
     // getEditFields: (state, getters,rootState, rootGetters) => {
     //   let headerItems = [];
     //   let Access = rootGetters['Access/access'];//ссылка на метод выдающий объект доступа

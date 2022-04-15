@@ -44,6 +44,26 @@
 </template>
 
 <script>
+  /*
+  *
+  *       <template
+              v-for="header in getTableHeadItemsRenderMultiTags"
+              v-slot:[`item.${header.value}`]="{ item }"
+      >
+
+        {{`item.${header.value}`}}
+        <multi-tags
+                :key="header.value"
+                :item="item"
+                :field="header.value"
+                :serverSettings="header.renderMultiTags"
+        >
+
+        </multi-tags>
+      </template>
+  * */
+
+
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'

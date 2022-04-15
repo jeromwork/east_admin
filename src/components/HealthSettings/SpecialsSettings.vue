@@ -18,7 +18,6 @@
         <e-edit :toogle="showEditDialog"
                 @close="showEditDialog=false"
                 @save="savedItemUpdateDataTable"
-
                 :fields="eEditFields"
                 :item="currentEditItem"
                 :serverSettings="{component : 'health', itemType : 'specials', actionSave : 'setVue'}"
