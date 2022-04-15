@@ -41,11 +41,7 @@ const Access = {
     },
 //=============================================================
     actions:{
-        async getAccessData({getters, state}){
-            console.log(state)
-            console.log(getters)
-
-
+        async getAccessData(){
             this.$http
                 .post('api/get-access-rules', )
                 .then(response => {this.info = response

@@ -45,10 +45,10 @@
                               md="6"
                             >
                               <v-text-field
-                                label="Email"
-                                v-model="email"
+                                label="Имя"
+                                v-model="name"
                                 required
-                                :error-messages="serverErrors.email"
+                                :error-messages="serverErrors.name"
                                 :rules="[v => !!v || 'Обязательное поле']"
                                 @input="clearErrors"
                               ></v-text-field>
@@ -213,6 +213,7 @@
             tab:null,
             dialog: false,
             email:'',
+            name:'',
             login:'',
             password:'',
             password_confirmation:'',
@@ -253,13 +254,13 @@
             doEnter() {
 
                 this.$refs.form.validate()
-                if(this.email === '' || this.password === ''){
+                if(this.name === '' || this.password === ''){
                     return false;
                 }
 
 
                 // this.$store.commit('Login/DOENTER', {login: this.login, password: this.password, handError:this.serverError, ths:this, handOk:this.serverOk});
-                this.$store.dispatch('Login/enterToSystem', {email: this.email, password: this.password});
+                this.$store.dispatch('Login/enterToSystem', {name: this.name, password: this.password});
 
             },
 

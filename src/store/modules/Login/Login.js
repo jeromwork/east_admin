@@ -70,7 +70,6 @@ export default {
 //=============================================================
     actions:{
         async enterToSystem({state}, formData){
-            console.log(formData);
             let qdata = {
               ...formData,
 

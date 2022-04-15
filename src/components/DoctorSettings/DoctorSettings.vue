@@ -308,7 +308,7 @@
 </template>
 
 <script>
-    import { mapGetters , mapMutations , mapState} from "vuex";
+    import {  mapMutations , mapState} from "vuex";
     import MultiTags from '../MultiTags/MultiTags';
     export default {
 
@@ -405,12 +405,7 @@
 
         computed:{
             //====================================================================
-            ...mapGetters({
-                getDoctors:'doctorSettings/getDoctors'
-                ,getChildAges:'doctorSettings/getArrChildAges'
-                //,currentDoctorId:'doctorSettings/currentDoctorId'
-                ,tagsSelected:'doctorSettings/tagsSelected'
-            }),
+
 
             ...mapState({currentDoctorId:'doctorSettings/currentDoctorId'}),
             //====================================================================
