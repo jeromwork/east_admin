@@ -7,6 +7,8 @@ import DocSelectSettings from '@/components/DocSelect/DocSelectSettings/DocSelec
 import DocSelect from '@/components/DocSelect/DocSelectUse/DocSelect'
 import FilialSettings from '@/components/FilialSettings/FilialSettings'
 import HealthSettings from "../components/HealthSettings/HealthSettings";
+import Reviews from "../components/Reviews/ReviewsData";
+
 import store from '@/store'
 
 
@@ -65,6 +67,13 @@ const router = new VueRouter({
           requiresAuth: true,
         },
       },
+        {
+            path: '/reviews/settings',
+            component: Reviews,
+            meta: {
+                requiresAuth: true,
+            },
+        },
     ],
 });
 

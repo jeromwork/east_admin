@@ -27,21 +27,22 @@ export default {
 
     getters: {
         menu_items: (state, getters,rootState, rootGetters) =>  {
-            let menuItems = [];
-            let accessMenuItems = rootGetters['Access/access']('mainMenuItems');
-          if(accessMenuItems){
-            for (let id in accessMenuItems ){
-                if(state.menuItems[id]){
-                  menuItems.push(state.menuItems[id])
-                }
-
-            }
-            if(menuItems.length === 0){
-              //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
-            }
-          }
-
-            return menuItems;
+            // let menuItems = [];
+            return rootGetters['Access/access']('mainMenuItems');
+          // if(accessMenuItems){
+          //   for (let id in accessMenuItems ){
+          //
+          //       if(state.menuItems[id]){
+          //         menuItems.push(state.menuItems[id])
+          //       }
+          //
+          //   }
+          //   if(menuItems.length === 0){
+          //     //console.log('Проверить, почему нет доступных пунктов меню для данного пользователя')
+          //   }
+          // }
+          //
+          //   return menuItems;
         },
 
 
