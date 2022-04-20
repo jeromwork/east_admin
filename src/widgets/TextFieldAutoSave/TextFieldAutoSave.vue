@@ -1,10 +1,28 @@
 <template>
-  <v-text-field
-    v-if="item"
-    :value="item[field]"
-    @change="saveData($event)"
-    :label="label"
-  ></v-text-field>
+  <div>
+    <v-text-field
+      v-if="item"
+      :value="item[field]"
+      @change="saveData($event)"
+      :label="label"
+    />
+    <v-snackbar
+      v-model="alert"
+    >
+      {{ alertText }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="pink"
+          text
+          v-bind="attrs"
+          @click="alert = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 
 </template>
 
@@ -32,11 +50,11 @@
 
 
         },
-      watch:{
-        item(item){
-          console.log(item)
-        },
-      },
+      data:() =>({
+        alertText:'',
+        alert:false,
+      }),
+
 
       methods:{
           saveData(value){
@@ -49,23 +67,24 @@
             }
 
             let data = {};
-            data[this.field] = + value;
-            let requestData = {
-              action: this.serverSettings.actionSave,
-              component: this.serverSettings.component,
-              id:this.item.id,
-              data,
-            };
-            this.$http.post(this.$http.CONNECTOR_URL, requestData )
+            data[this.field] = value;
+            // let requestData = {
+            //   //id:this.item.id,
+            //   data,
+            // };
+            this.$http.put('api/' + this.url + '/' + this.item.id, {...data} )
                     .then(response => {
-                      this.info = response
-                      if(!response.data || !response.data.items || !response.data.count)
-                      {
-                        console.log('Проверьте структуру данных Специальностей');
-                        return;
-                      }
-
-                    });
+                      console.log(response)
+                      this.alertText = 'Сохранено!';
+                      this.alert = true;
+                    }).catch(
+//todo сделать вывод ошибок и подтверждение сохранения
+               (error) => {
+                this.alertText = error;
+                this.alert = true;
+                console.log(error)
+              }
+            );
           }
       },
       created() {
