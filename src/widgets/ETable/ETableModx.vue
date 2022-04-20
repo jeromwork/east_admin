@@ -15,7 +15,6 @@
       <template
               v-for="header in getTableHeadItemsNeedRender"
               v-slot:[`item.${header.value}`]="{ item }"
-
       >
         <multi-tags
                 v-if="header.render.type == 'multiTags'"
@@ -35,18 +34,6 @@
                 :field="header.value"
                 :serverSettings="header.serverSettings"
         ></e-checkbox>
-
-
-        <TextFieldAutoSave
-                v-if="header.render && header.render.type == 'text'"
-                :key="header.value"
-                :url="urlApi"
-                :field="header.value"
-                :item="item"
-                :label="header.render.label"
-
-        />
-
 
       </template>
 
@@ -81,17 +68,14 @@
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
     import MultiTags from "../../components/MultiTags/MultiTags";
-    import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
-
     //const {state:  stateModule,getters, mutations} = ETable
 
     export default {
       components: {
         'e-checkbox' : ECheckbox,
         'multi-tags' : MultiTags,
-        TextFieldAutoSave : TextFieldAutoSave,
       },
-        name: "ETable",
+        name: "ETableModx",
         props: {
           saveSettings:{
             component : String,
@@ -101,12 +85,6 @@
             items:String,
             action:String,
 
-          },
-          urlApi:{
-            type:String
-          },
-          itemKey:{
-            type:String,
           },
           fields:{type:Array, required: true},
           refreshItems:{type:Array},
@@ -124,15 +102,17 @@
         initStoreModule(){
           //при запуске компонента, создается новый vuex модуль, с уникальным именем
           //соответственно мутации и комиты будут через это уникальное имя модуля
-          this.storeName = `ETable_${this.urlApi}`;
+          this.storeName = `ETable_${this.serverSettings.items}`;
           store.registerModule(this.storeName, {
             ...ETable,
             component:'specials',
             namespaced: true,
           });
           this.$store.commit(this.storeName + '/SET_ETABLE_OPTIONS', {
-            urlApi:this.urlApi,
-            storeName:this.storeName,
+            itemsName:this.serverSettings.items,
+            id:this.storeName,
+            action:this.serverSettings.action,
+            component:this.serverSettings.component,
           });
 
         },

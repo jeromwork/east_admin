@@ -13,8 +13,7 @@ export default {
 
     state: {
         component:'', //компонент на сервере
-        urlApi:'',
-      storeName : '',
+        id:'',
         itemsName:'',
         Items:[],
         limit: 10,
@@ -32,7 +31,6 @@ export default {
         },
         FILL_ITEMS(state, items){
 
-          console.log(11111)
             //если в массив ids которых надо обновить не пуст
             //значит обновляем только те items которые нужно обновить
             if(state.refreshItems.length > 0){
@@ -60,9 +58,7 @@ export default {
                         existItems.push(item);
                     }
                 });
-
                 state.Items = existItems;
-              console.log({...state})
                 state.refreshItems = [];
                 return;
             }
@@ -73,11 +69,14 @@ export default {
             state.count = count;
         },
         SET_ETABLE_OPTIONS(state, options){
-            if(!options.urlApi ){
+            if(!options.id || !options.component || !options.itemsName || !options.action){
                 throw new Error('Неправильный массив опций, для настройки модуля ETable.js', 16);
             }
-            state.urlApi = options.urlApi;
-            state.storeName = options.storeName;
+            state.id = options.id;
+            state.component = options.component;
+            state.itemsName = options.itemsName;
+            state.action = options.action;
+            console.log(state.id)
         },
         SET_REFRESH_ITEMS(state, ids){
             if(ids.length > 0){
@@ -90,7 +89,6 @@ export default {
     actions:{
         async GET_ITEMS({state}){
 
-
             let requestData = {
                 action:  state.itemsName + '/getVue',
                 component:state.component,
@@ -102,21 +100,23 @@ export default {
                 requestData['ids'] = state.refreshItems;
             }
 
-            this.$http.get('api/' + state.urlApi, requestData )
-                .then(response => {this.info = response
 
-                    if( !response.data )
+            this.$http.post(this.$http.CONNECTOR_URL, requestData )
+                .then(response => {this.info = response
+                    if(!response.data || !response.data.items || !response.data.count)
                     {
-                        console.log('Проверьте структуру данных Отзывов');
+                        console.log('Проверьте структуру данных Специальностей');
                         return;
                     }
-                    this.commit(state.storeName + '/FILL_ITEMS', response.data);
-                    //this.commit(state.storeId + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
+
+                    this.commit(state.id + '/FILL_ITEMS', response.data.items);
+                    this.commit(state.id + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
                 });
         },
     },
     getters: {
         getItems : state => {
+            console.log('etablegetItems')
             return state.Items;
         },
         getTotalCountItems :state => {

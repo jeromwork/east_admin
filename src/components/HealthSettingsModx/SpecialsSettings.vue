@@ -30,7 +30,7 @@
 
 
 <script>
-     import ETable from "../../widgets/ETable/ETableModx";
+     import ETable from "../../widgets/ETable/ETable";
      import EEdit from "../../widgets/EEdit/EEdit";
 
     export default {
