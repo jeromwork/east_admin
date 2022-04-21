@@ -15,7 +15,6 @@
       <e-edit :toogle="showEditDialog"
               @close="showEditDialog=false"
               @save="savedItemUpdateDataTable"
-
               :fields="eEditFields"
               :item="currentEditItem"
               urlApi="reviews"
@@ -62,7 +61,6 @@
       },
       methods:{
         editItem(e, item){
-          console.log(22222222222)
           this.showEditDialog = true
           this.currentEditItem = item;
         },

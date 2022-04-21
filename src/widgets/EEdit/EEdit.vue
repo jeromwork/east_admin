@@ -123,6 +123,7 @@
 <script>
 
     import MultiTags from "../../components/MultiTags/MultiTags";
+    import _ from "lodash";
 
     export default {
         name: "EEdit",
@@ -182,6 +183,7 @@
               }
             }else{
               this.editedItem = JSON.parse(this.editedItemJSON);
+
               this.$emit('close');
             }
           },
@@ -198,29 +200,34 @@
           //обходим настройки полей.
           //если видим у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
           //если настройки уже были, значит добавляем данные для сохранения
-          //отправляем данные для сохранения, только в том случае, если для такого поля была настройка рендеринга
+          //отправляем данные для сохранения, только в том случае, если для такого поля был url для сохранения
+          let saveData = this.getSaveData();
+          _.each(saveData, (data, url) => {
+            this.$http.put('api/' + url + '/' + this.item.id, {...data} )
+              .then(response => {
 
-            console.log(this.getSaveData());
+                console.log(response)
+
+                if(response.data && response.data.ok){
+                  this.lastMessageFromServer = 'Сохранение прошло успешно!';
+                  this.$emit('save', e, this.item.id);
+                }else{
+                  console.log('Проверьте структуру данных Специальностей');
+                  return;
+                }
+
+              });
+
+          });
+
+
+            console.log(saveData);
 
             console.log(e)
 
             return;
 
-          // console.log(requestData);
-          // this.$http.put('api/' + this.urlApi + '/' + this.item.id, requestData )
-          //   .then(response => {
-          //
-          //     console.log(response)
-          //
-          //     if(response.data && response.data.ok){
-          //       this.lastMessageFromServer = 'Сохранение прошло успешно!';
-          //       this.$emit('save', e, this.item.id);
-          //     }else{
-          //       console.log('Проверьте структуру данных Специальностей');
-          //       return;
-          //     }
-          //
-          //   });
+
         },
 
         getSaveData(){
@@ -237,20 +244,14 @@
           let saveFields = {};
           this._.map(this.fields, (field) => {
             let url = (field.urlApi) ? field.urlApi: this.urlApi;
-            let keyServerSettings = '';
-
-            if(field.value && this.editedItem[field.value] !== undefined){
-              if(!saveFields[keyServerSettings]){
-                saveFields[keyServerSettings] = {
-                  serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
-                  data: [{field : field.value, value: this.editedItem[field.value]}] };
-              }else{
-                saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
+            if(field.urlApi && field.value && JSON.stringify(this.editedItem[field.value]) !== JSON.stringify(this.item[field.value])){
+              if(!saveFields[url]){
+                saveFields[url] = {};
               }
+              saveFields[url][field.value] = this.editedItem[field.value];
             }
-
           });
-          return this._.values(saveFields);
+          return saveFields;
         },
         getChangeData(){
             return {};
