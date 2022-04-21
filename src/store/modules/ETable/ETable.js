@@ -108,7 +108,7 @@ export default {
                         return;
                     }
                     this.commit(state.storeName + '/FILL_ITEMS', response.data.data);
-                    this.commit(state.storeId + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
+                    this.commit(state.storeName + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
                 });
         },
     },

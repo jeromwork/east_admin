@@ -6,7 +6,7 @@
       :headers="getTableHeadItems"
       :items="items"
       item-key="id"
-      :server-items-length="getTotalCountItems"
+      :server-items-length="totalCountItems"
       @update:options="setOptions"
       @dblclick:row="dblclickRow"
     >
@@ -177,7 +177,7 @@
             return headers;
           },
         },
-        getTotalCountItems:{
+        totalCountItems:{
           get(){
             return this.$store.getters[this.storeName + "/getTotalCountItems"];
           },
