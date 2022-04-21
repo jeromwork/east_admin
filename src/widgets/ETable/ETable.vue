@@ -46,6 +46,15 @@
                 :label="header.render.label"
 
         />
+        <TextareaAutoSave
+          v-if="header.render && header.render.type == 'textarea'"
+          :key="header.value"
+          :url="urlApi"
+          :field="header.value"
+          :item="item"
+          :label="header.render.label"
+
+        />
 
 
       </template>
@@ -62,6 +71,7 @@
     import ETable from '../../store/modules/ETable/ETable'
     import MultiTags from "../../components/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
+    import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
 
     //const {state:  stateModule,getters, mutations} = ETable
 
@@ -70,6 +80,7 @@
         'e-checkbox' : ECheckbox,
         'multi-tags' : MultiTags,
         TextFieldAutoSave : TextFieldAutoSave,
+        TextareaAutoSave:TextareaAutoSave,
       },
         name: "ETable",
         props: {

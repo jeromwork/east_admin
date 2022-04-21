@@ -55,8 +55,15 @@
                     v-model="editedItem[field.value]"
                     :counter="field.countSymbols"
                     :label="field.text"
-                    required
+
                   ></v-text-field>
+
+                  <v-textarea
+                    v-if="field.render.type==='textarea'"
+                    v-model="editedItem[field.value]"
+                    :label="field.text"
+                    solo
+                  ></v-textarea>
 
                   <multi-tags
                     v-if="field.render.type == 'multiTags'"
@@ -76,6 +83,8 @@
                     false-value="0"
                     :label="field.text"
                   ></v-checkbox>
+
+
 
                 </v-col>
 
@@ -191,7 +200,7 @@
           //если настройки уже были, значит добавляем данные для сохранения
           //отправляем данные для сохранения, только в том случае, если для такого поля была настройка рендеринга
 
-            console.log(this.getSaveData(this.fields));
+            console.log(this.getSaveData());
 
             console.log(e)
 
@@ -214,7 +223,7 @@
           //   });
         },
 
-        getSaveData(fields){
+        getSaveData(){
             //предполагается что в одной форме редактирования, могут сохранятся данные по разным роутам ларавел
           //поэтому нужно проверить какие данные изменились
           //собрать массив роутов
@@ -222,26 +231,29 @@
           //потом в цикле обойти роуты и сохранить
           //выводя ошибки если есть
           //и вывести одно оповещение об успешном сохранении для всех роутов
-          console.log(fields)
-          let saveFields = {};
-          this._.map(fields, (field) => {
-            if(field.serverSettings && field.serverSettings){
-              let keyServerSettings = '';
-              if(field.serverSettings.component) keyServerSettings += field.serverSettings.component;
-              if(field.serverSettings.actionSave) keyServerSettings += field.serverSettings.setAction;
 
-              if(field.value && this.editedItem[field.value] !== undefined){
-                if(!saveFields[keyServerSettings]){
-                  saveFields[keyServerSettings] = {
-                    serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
-                    data: [{field : field.value, value: this.editedItem[field.value]}] };
-                }else{
-                  saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
-                }
+          //todo проверить какие поля изменились
+
+          let saveFields = {};
+          this._.map(this.fields, (field) => {
+            let url = (field.urlApi) ? field.urlApi: this.urlApi;
+            let keyServerSettings = '';
+
+            if(field.value && this.editedItem[field.value] !== undefined){
+              if(!saveFields[keyServerSettings]){
+                saveFields[keyServerSettings] = {
+                  serverSettings : { actionSave:field.serverSettings.actionSave, component:field.serverSettings.component },
+                  data: [{field : field.value, value: this.editedItem[field.value]}] };
+              }else{
+                saveFields[keyServerSettings]['data'].push({field : field.value, value: this.editedItem[field.value]});
               }
             }
+
           });
           return this._.values(saveFields);
+        },
+        getChangeData(){
+            return {};
         },
 
       },
