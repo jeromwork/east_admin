@@ -28,7 +28,7 @@ export default {
     getters: {
         menu_items: (state, getters,rootState, rootGetters) =>  {
             // let menuItems = [];
-            return rootGetters['Access/access']('mainMenuItems');
+            return rootGetters['Access/accessRules']('mainMenuItems');
           // if(accessMenuItems){
           //   for (let id in accessMenuItems ){
           //

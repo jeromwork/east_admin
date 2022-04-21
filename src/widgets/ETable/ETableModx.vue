@@ -75,7 +75,7 @@
         'e-checkbox' : ECheckbox,
         'multi-tags' : MultiTags,
       },
-        name: "ETable",
+      name: "ETableModx",
         props: {
           saveSettings:{
             component : String,

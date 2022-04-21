@@ -18,6 +18,7 @@
         <e-edit :toogle="showEditDialog"
                 @close="showEditDialog=false"
                 @save="savedItemUpdateDataTable"
+
                 :fields="eEditFields"
                 :item="currentEditItem"
                 :serverSettings="{component : 'health', itemType : 'specials', actionSave : 'setVue'}"
@@ -29,7 +30,7 @@
 
 
 <script>
-     import ETable from "../../widgets/ETable/ETableModx";
+     import ETable from "../../widgets/ETable/ETable";
      import EEdit from "../../widgets/EEdit/EEdit";
 
     export default {

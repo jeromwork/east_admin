@@ -49,7 +49,8 @@ export default {
     //если присылаются данные, ставим пометку, что юзер авторизован
     //console.log('created');
     this.$store.dispatch('Login/getUserData');
-      this.$store.dispatch('Access/getAccessData');
+      this.$store.dispatch('Access/getAccessLists');
+    this.$store.dispatch('Access/getAccessRules');
       this.$store.dispatch('Access/initWebSocket');
   },
   data: () => ({
