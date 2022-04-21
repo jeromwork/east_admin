@@ -92,26 +92,23 @@ export default {
 
 
             let requestData = {
-                action:  state.itemsName + '/getVue',
-                component:state.component,
                 limit:state.requestOptions.itemsPerPage,
                 offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
-                requestOptions:state.requestOptions,
             };
             if(state.refreshItems.length > 0){
                 requestData['ids'] = state.refreshItems;
             }
 
-            this.$http.get('api/' + state.urlApi, requestData )
+            this.$http.get('api/' + state.urlApi, {params:{...requestData}} )
                 .then(response => {this.info = response
 
-                    if( !response.data )
+                    if( !response?.data?.data )
                     {
                         console.log('Проверьте структуру данных Отзывов');
                         return;
                     }
-                    this.commit(state.storeName + '/FILL_ITEMS', response.data);
-                    //this.commit(state.storeId + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
+                    this.commit(state.storeName + '/FILL_ITEMS', response.data.data);
+                    this.commit(state.storeId + '/SET_TOTAL_COUNT_ITEMS', response.data.count);
                 });
         },
     },

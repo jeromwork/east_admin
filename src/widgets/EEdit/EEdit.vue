@@ -206,7 +206,6 @@
             this.$http.put('api/' + url + '/' + this.item.id, {...data} )
               .then(response => {
 
-                console.log(response)
 
                 if(response.data && response.data.ok){
                   this.lastMessageFromServer = 'Сохранение прошло успешно!';

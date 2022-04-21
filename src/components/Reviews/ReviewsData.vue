@@ -1,6 +1,6 @@
 <template>
   <div>
-
+<!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
     <e-table
       urlApi="reviews"
       dense
@@ -53,8 +53,8 @@
         },
         eEditFields:{
           get(){
-            let editFields = this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
-            console.log(editFields)
+            // let editFields = this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
+            // console.log(editFields)
             return  this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
           },
         },
@@ -66,7 +66,7 @@
         },
         savedItemUpdateDataTable(e, id){
           //this.showEditDialog=false;
-          console.log(id)
+          // console.log(id)
           //после сохранения сущности, обновляем с сервера только одну эту сущность
           this.refreshItems = [id];
         },
