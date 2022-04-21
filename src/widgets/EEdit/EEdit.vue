@@ -47,7 +47,7 @@
 
                 <v-col
                   cols="12"
-                  :md="field.render.col.md"
+                  :md="(field.render.col && field.render.col.md) ? field.render.col.md : 12"
                   v-for="(field, index) in row" :key="index"
                 >
                   <v-text-field
@@ -124,13 +124,10 @@
           toogle:Boolean,
           fields:{  type:Array, required:true,  },
           item:{type: Object},
-          serverSettings:{
-            component:{  type:String, required:true,  },
-            itemType:{  type:String, required:true,  },
-            action:{  type:String, required:true,  },
+          urlApi:{
+            type:String,
             required:true,
           },
-
 
         },
       created() {
@@ -179,51 +176,53 @@
               this.$emit('close');
             }
           },
+
+
           save(e){
-
-
           this.$emit('close');
-
-
           this.saveSuccess = true
           if(!this.item.id){
             throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
           }
 
 
-          let requestData = {
-            action: this.serverSettings.actionSave,
-            component: this.serverSettings.component,
-            id:this.item.id,
-          };
-
-            console.log(this.serverSettings)
-
           //обходим настройки полей.
-          //если видем у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
+          //если видим у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
           //если настройки уже были, значит добавляем данные для сохранения
           //отправляем данные для сохранения, только в том случае, если для такого поля была настройка рендеринга
 
-            requestData['save'] = this.getSaveData(this.fields);
+            console.log(this.getSaveData(this.fields));
 
-            console.log(requestData)
+            console.log(e)
 
+            return;
 
-          console.log(requestData);
-          this.$http.post(this.$http.CONNECTOR_URL, requestData )
-            .then(response => {
-              this.info = response
-              if(response.data && response.data.ok){
-                this.lastMessageFromServer = 'Сохранение прошло успешно!';
-                this.$emit('save', e, this.item.id);
-              }else{
-                console.log('Проверьте структуру данных Специальностей');
-                return;
-              }
-
-            });
+          // console.log(requestData);
+          // this.$http.put('api/' + this.urlApi + '/' + this.item.id, requestData )
+          //   .then(response => {
+          //
+          //     console.log(response)
+          //
+          //     if(response.data && response.data.ok){
+          //       this.lastMessageFromServer = 'Сохранение прошло успешно!';
+          //       this.$emit('save', e, this.item.id);
+          //     }else{
+          //       console.log('Проверьте структуру данных Специальностей');
+          //       return;
+          //     }
+          //
+          //   });
         },
+
         getSaveData(fields){
+            //предполагается что в одной форме редактирования, могут сохранятся данные по разным роутам ларавел
+          //поэтому нужно проверить какие данные изменились
+          //собрать массив роутов
+          //и в каждый массив записать поля и измененные данные
+          //потом в цикле обойти роуты и сохранить
+          //выводя ошибки если есть
+          //и вывести одно оповещение об успешном сохранении для всех роутов
+          console.log(fields)
           let saveFields = {};
           this._.map(fields, (field) => {
             if(field.serverSettings && field.serverSettings){
@@ -256,31 +255,20 @@
         },
 
         fields(fields){
-          console.log(fields)
-
           this.mapRowsCols = {};
-
-
-
-          //let cols = 12;
-          //this.mapRowsCols.push([]);//сразу добавляем строку
           this._.map(fields, (field) => {
-            //let currentNumberRow = Object.keys(this.mapRowsCols).length;
-            if(field.render && field.render.rowNumber){
-              if(!this.mapRowsCols[field.render.rowNumber]){
-                this.mapRowsCols[field.render.rowNumber] = [];
-              }
-              this.mapRowsCols[field.render.rowNumber].push(field);
-
-              //currentNumberRow = field.render.rowNumber;
-
+            if(!field.render) return;
+            let row = (field.render.rowNumber) ? field.render.rowNumber : 1;
+            if(!this.mapRowsCols[row]){
+              this.mapRowsCols[row] = [];
             }
+            this.mapRowsCols[row].push(field);
           });
           this.mapRowsCols = this._.values(this.mapRowsCols);
-          console.log(this.mapRowsCols)
-          if(this.mapRowsCols[0].length === 0){//если не нашли ни одного поля для рендерингка
+          if(this.mapRowsCols[0]?.length === 0){//если не нашли ни одного поля для рендерингка
             this.mapRowsCols = [];//тогда вообще ничего не надо рендерить
           }
+
         },
 
         toogle(toogle){
