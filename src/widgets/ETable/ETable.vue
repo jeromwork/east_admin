@@ -46,6 +46,15 @@
                 :label="header.render.label"
 
         />
+        <TextareaAutoSave
+          v-if="header.render && header.render.type == 'textarea'"
+          :key="header.value"
+          :url="urlApi"
+          :field="header.value"
+          :item="item"
+          :label="header.render.label"
+
+        />
 
 
       </template>
@@ -57,31 +66,12 @@
 </template>
 
 <script>
-  /*
-  *
-  *       <template
-              v-for="header in getTableHeadItemsRenderMultiTags"
-              v-slot:[`item.${header.value}`]="{ item }"
-      >
-
-        {{`item.${header.value}`}}
-        <multi-tags
-                :key="header.value"
-                :item="item"
-                :field="header.value"
-                :serverSettings="header.renderMultiTags"
-        >
-
-        </multi-tags>
-      </template>
-  * */
-
-
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
     import MultiTags from "../../components/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
+    import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
 
     //const {state:  stateModule,getters, mutations} = ETable
 
@@ -90,6 +80,7 @@
         'e-checkbox' : ECheckbox,
         'multi-tags' : MultiTags,
         TextFieldAutoSave : TextFieldAutoSave,
+        TextareaAutoSave:TextareaAutoSave,
       },
         name: "ETable",
         props: {
@@ -207,7 +198,7 @@
       },
     watch:{
       fields(){
-        console.log(this.fields)
+        // console.log(this.fields)
       },
       refreshItems(){
         this.$store.commit(this.storeName + '/SET_REFRESH_ITEMS', this.refreshItems);
