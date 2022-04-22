@@ -90,11 +90,11 @@ export default {
     actions:{
         async GET_ITEMS({state}){
 
+          let requestData = {};
+          if(state.requestOptions){
+            requestData = {...state.requestOptions};
+          }
 
-            let requestData = {
-                limit:state.requestOptions.itemsPerPage,
-                offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
-            };
             if(state.refreshItems.length > 0){
                 requestData['ids'] = state.refreshItems;
             }

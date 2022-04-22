@@ -6,6 +6,7 @@
       :headers="getTableHeadItems"
       :items="items"
       item-key="id"
+      :multi-sort="true"
       :server-items-length="totalCountItems"
       @update:options="setOptions"
       @dblclick:row="dblclickRow"
@@ -131,6 +132,7 @@
           this.$store.dispatch(this.storeName + '/GET_ITEMS');
         },
         setOptions(options){
+          console.log(options)
           this.$store.commit(this.storeName + '/SET_OPTIONS', options);
           this.getItems();
         },
