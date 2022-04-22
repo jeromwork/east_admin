@@ -105,7 +105,7 @@ export default {
                     if( !response?.data?.data )
                     {
                         console.log('Проверьте структуру данных Отзывов');
-                        return;
+                        return true;
                     }
                     this.commit(state.storeName + '/FILL_ITEMS', response.data.data);
                     if(response.data?.count){

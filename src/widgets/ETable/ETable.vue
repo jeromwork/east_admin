@@ -10,25 +10,14 @@
       :server-items-length="totalCountItems"
       @update:options="setOptions"
       @dblclick:row="dblclickRow"
+      :loading="loading"
     >
       <template v-for="slotName in Object.keys($scopedSlots)"
                 v-slot:[slotName]="slotScope">
         <slot :name="slotName" v-bind="slotScope"></slot>
       </template>
 
-      <template v-slot:body.append>
-        <tr>
-          <td></td>
-          <td>
-            <v-text-field
-              v-model="calories"
-              type="number"
-              label="Less than"
-            ></v-text-field>
-          </td>
-          <td colspan="4"></td>
-        </tr>
-      </template>
+
 
 
       <template
@@ -126,6 +115,7 @@
           storeName: '',
           calories:'',
           search:'',
+          loading:false,
         };},
       created() {
         this.initStoreModule();
@@ -148,10 +138,12 @@
 
         },
         getItems(){
-          this.$store.dispatch(this.storeName + '/GET_ITEMS');
+          this.loading = true;
+          this.$store.dispatch(this.storeName + '/GET_ITEMS').then(() => {
+              this.loading = false;
+          });
         },
         setOptions(options){
-          console.log(options)
           this.$store.commit(this.storeName + '/SET_OPTIONS', options);
           this.getItems();
         },
@@ -222,7 +214,6 @@
         // console.log(this.fields)
       },
       refreshItems(){
-        console.log(11111111111)
         this.$store.commit(this.storeName + '/SET_REFRESH_ITEMS', this.refreshItems);
         this.$store.dispatch(this.storeName + '/GET_ITEMS');
       },

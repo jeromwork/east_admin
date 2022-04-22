@@ -13,6 +13,12 @@
 
       >
         <template v-slot:top>
+<!--          В top нужно добавить кнопку создания сущности и панель фильтрации-->
+          <v-btn
+            elevation="2"
+            raised
+            @click="editItem($event, {})"
+          >Новый отзыв</v-btn>
           <v-text-field
             v-model="search"
             label="Search"
@@ -49,6 +55,7 @@
         data: ()=>({
             items:{},
           search:'',
+          calories:'',
             showEditDialog:false,
             currentEditItem : {},
           refreshItems:[],
@@ -73,6 +80,7 @@
       },
       methods:{
         editItem(e, item){
+          console.log(9999999)
           this.showEditDialog = true
           this.currentEditItem = item;
         },
