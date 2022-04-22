@@ -6,6 +6,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
       scrollable
+      @click:outside="Close"
     >
 
       <v-card tile >
@@ -122,6 +123,9 @@
 
 <script>
 
+
+  //bug не передается данные во второй раз
+  //Не открывается форма сохранения, если несколько раз щелкнул по таблице
     import MultiTags from "../../components/MultiTags/MultiTags";
     import _ from "lodash";
 
@@ -146,18 +150,12 @@
         data:() => {
           return {
             dialog: false,
-
-
-
             notifications: false,
             sound: true,
             widgets: false,
             editedItem:{},
             editedItemJSON : '',
-
-
             valid: false,
-
             nameRules: [
               v => !!v || 'Name is required',
               v => v.length <= 10 || 'Name must be less than 10 characters',
@@ -175,6 +173,7 @@
         },
 
       methods:{
+
           Close(){
             if(JSON.stringify(this.editedItem) !== this.editedItemJSON){//если данные были изменены,
               if(confirm('Выйти без сохранения?')) {//нужно предложить их сохранить, либо выйти без сохранения
@@ -183,7 +182,6 @@
               }
             }else{
               this.editedItem = JSON.parse(this.editedItemJSON);
-
               this.$emit('close');
             }
           },
@@ -205,7 +203,6 @@
           _.each(saveData, (data, url) => {
             this.$http.put('api/' + url + '/' + this.item.id, {...data} )
               .then(response => {
-
                 if(response.data && response.data.ok){
                   this.lastMessageFromServer = 'Сохранение прошло успешно!';
                   this.$emit('save', e, this.item.id);
@@ -217,12 +214,6 @@
               });
 
           });
-
-
-            console.log(saveData);
-
-            console.log(e)
-
             return;
 
 
@@ -283,6 +274,7 @@
         },
 
         toogle(toogle){
+          console.log(toogle)
           if(toogle !== this.dialog){
             this.dialog = toogle;
           }
