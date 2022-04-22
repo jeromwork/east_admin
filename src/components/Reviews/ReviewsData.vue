@@ -80,7 +80,6 @@
       },
       methods:{
         editItem(e, item){
-          console.log(9999999)
           this.showEditDialog = true
           this.currentEditItem = item;
         },

@@ -309,7 +309,7 @@
 
 <script>
     import {  mapMutations , mapState} from "vuex";
-    import MultiTags from '../MultiTags/MultiTags';
+    import MultiTags from '@/widgets/MultiTags/MultiTags';
     export default {
 
 

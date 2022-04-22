@@ -289,7 +289,7 @@
 
 <script>
     import { mapGetters , mapMutations , mapState} from "vuex";
-    import MultiTags from '@/components/MultiTags/MultiTags';
+    import MultiTags from '@/widgets/MultiTags/MultiTags';
     export default {
 
 

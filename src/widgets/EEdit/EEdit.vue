@@ -85,7 +85,16 @@
                     :label="field.text"
                   ></v-checkbox>
 
-
+                  <e-select
+                    v-if="field.render.type == 'select'"
+                    v-model="editedItem[field.value]"
+                    :key="field.value"
+                    :field="field.value"
+                    :items="field.items"
+                    :server="field.server"
+                    :label="field.text"
+                    dense
+                  ></e-select>
 
                 </v-col>
 
@@ -123,13 +132,15 @@
 
 <script>
 
-    import MultiTags from "../../components/MultiTags/MultiTags";
+    import MultiTags from "../../widgets/MultiTags/MultiTags";
+    import ESelect from "@/widgets/ESelect/ESelect"
     import _ from "lodash";
 
     export default {
         name: "EEdit",
       components: {
         'multi-tags' : MultiTags,
+        'e-select' : ESelect,
       },
         props:{
           toogle:Boolean,
@@ -229,8 +240,8 @@
 
           let saveFields = {};
           this._.map(this.fields, (field) => {
-            let url = (field.urlApi) ? field.urlApi: this.urlApi;
-            if(field.urlApi && field.value && JSON.stringify(this.editedItem[field.value]) !== JSON.stringify(this.item[field.value])){
+            let url = (field.server?.urlSet) ? field.server.urlSet: this.urlApi;
+            if(url && field.value && JSON.stringify(this.editedItem[field.value]) !== JSON.stringify(this.item[field.value])){
               if(!saveFields[url]){
                 saveFields[url] = {};
               }
@@ -271,7 +282,6 @@
         },
 
         toogle(toogle){
-          console.log(toogle)
           if(toogle !== this.dialog){
             this.dialog = toogle;
           }
