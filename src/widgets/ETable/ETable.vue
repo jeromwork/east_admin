@@ -11,6 +11,24 @@
       @update:options="setOptions"
       @dblclick:row="dblclickRow"
     >
+      <template v-for="slotName in Object.keys($scopedSlots)"
+                v-slot:[slotName]="slotScope">
+        <slot :name="slotName" v-bind="slotScope"></slot>
+      </template>
+
+      <template v-slot:body.append>
+        <tr>
+          <td></td>
+          <td>
+            <v-text-field
+              v-model="calories"
+              type="number"
+              label="Less than"
+            ></v-text-field>
+          </td>
+          <td colspan="4"></td>
+        </tr>
+      </template>
 
 
       <template
@@ -106,7 +124,8 @@
         },
         data: function () {return {
           storeName: '',
-
+          calories:'',
+          search:'',
         };},
       created() {
         this.initStoreModule();

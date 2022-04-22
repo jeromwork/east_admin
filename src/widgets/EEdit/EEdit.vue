@@ -123,9 +123,6 @@
 
 <script>
 
-
-  //bug не передается данные во второй раз
-  //Не открывается форма сохранения, если несколько раз щелкнул по таблице
     import MultiTags from "../../components/MultiTags/MultiTags";
     import _ from "lodash";
 

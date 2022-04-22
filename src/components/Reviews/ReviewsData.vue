@@ -1,15 +1,26 @@
 <template>
-  <div>
-<!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
-    <e-table
-      urlApi="reviews"
-      dense
-      item-key="id"
-      @editItem="editItem"
-      :fields="eTableFields"
-      :refreshItems="refreshItems"
-      @refreshedItems="refreshItems=[]"
-    ></e-table>
+  <v-container fluid>
+    <v-card>
+      <!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
+      <e-table
+        urlApi="reviews"
+        dense
+        item-key="id"
+        @editItem="editItem"
+        :fields="eTableFields"
+        :refreshItems="refreshItems"
+        @refreshedItems="refreshItems=[]"
+
+      >
+        <template v-slot:top>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            class="mx-4"
+          ></v-text-field>
+        </template>
+
+      </e-table>
 
       <e-edit :toogle="showEditDialog"
               @close="showEditDialog=false"
@@ -20,7 +31,9 @@
       >
       </e-edit>
 
-  </div>
+    </v-card>
+  </v-container>
+
 </template>
 
 <script>
@@ -35,7 +48,7 @@
         },
         data: ()=>({
             items:{},
-
+          search:'',
             showEditDialog:false,
             currentEditItem : {},
           refreshItems:[],
