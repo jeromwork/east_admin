@@ -203,6 +203,7 @@
         // console.log(this.fields)
       },
       refreshItems(){
+        console.log(11111111111)
         this.$store.commit(this.storeName + '/SET_REFRESH_ITEMS', this.refreshItems);
         this.$store.dispatch(this.storeName + '/GET_ITEMS');
       },

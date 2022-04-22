@@ -7,7 +7,6 @@
       item-key="id"
       @editItem="editItem"
       :fields="eTableFields"
-
       :refreshItems="refreshItems"
       @refreshedItems="refreshItems=[]"
     ></e-table>
@@ -66,7 +65,7 @@
         },
         savedItemUpdateDataTable(e, id){
           //this.showEditDialog=false;
-          // console.log(id)
+           console.log(id)
           //после сохранения сущности, обновляем с сервера только одну эту сущность
           this.refreshItems = [id];
         },
