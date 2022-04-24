@@ -83,7 +83,7 @@
           this.showEditDialog = true
           this.currentEditItem = item;
         },
-        savedItemUpdateDataTable(e, id){
+        savedItemUpdateDataTable(id){
           //this.showEditDialog=false;
            console.log(id)
           //после сохранения сущности, обновляем с сервера только одну эту сущность

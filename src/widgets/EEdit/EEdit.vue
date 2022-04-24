@@ -195,48 +195,65 @@
           },
 
 
-          save(e){
-          this.$emit('close');
-          this.saveSuccess = true
-          if(!this.item.id){
-            throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
-          }
-
-
-          //обходим настройки полей.
-          //если видим у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
-          //если настройки уже были, значит добавляем данные для сохранения
-          //отправляем данные для сохранения, только в том случае, если для такого поля был url для сохранения
-          let saveData = this.getSaveData();
-          _.each(saveData, (data, url) => {
-            this.$http.put('api/' + url + '/' + this.item.id, {...data} )
-              .then(response => {
-                if(response.data && response.data.ok){
-                  this.lastMessageFromServer = 'Сохранение прошло успешно!';
-                  this.$emit('save', e, this.item.id);
-                }else{
-                  console.log('Проверьте структуру данных Специальностей');
-                  return;
-                }
-
-              });
-
-          });
+          save(){
+              this.$emit('close');
+              this.saveSuccess = true
+              //обходим настройки полей.
+              //если видим у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
+              //если настройки уже были, значит добавляем данные для сохранения
+              //отправляем данные для сохранения, только в том случае, если для такого поля был url для сохранения
+              let saveData = this.getSaveData();
+              //сначала сохраняем основную модель, потом остальные модели
+              if(saveData[this.urlApi]){
+                  this.createModel(saveData[this.urlApi], this.urlApi );
+                  delete saveData[this.urlApi];
+              }
+              if(Object.keys(saveData).length > 0){
+                  _.each(saveData, (data, url) => {
+                    this.updateModel(data, url);
+                  });
+              }
             return;
+        },
 
+        getChangeData(){
+            return {};
+        },
+        updateModel(data, url){
+          this.$http.put('api/' + url + '/' + this.item.id, {...data} )
+            .then(response => {
+              this.handRequestFromServer(response);
+            });
+        },
+        createModel(data, url){
+          this.$http.post('api/' + url, {...data} )
+            .then(response => {
 
+              this.handRequestFromServer(response);
+
+            });
+        },
+        handRequestFromServer(response){
+          //todo сделать вывод success & error
+          if(response.data && response.data.ok){
+            this.lastMessageFromServer = 'Сохранение прошло успешно!';
+            if(this.item.id){
+              this.$emit('save', this.item.id);
+            }
+
+          }else{
+            console.log('Ошибка сохранения сущности')
+          }
         },
 
         getSaveData(){
-            //предполагается что в одной форме редактирования, могут сохранятся данные по разным роутам ларавел
+          //предполагается что в одной форме редактирования, могут сохранятся данные по разным роутам ларавел
           //поэтому нужно проверить какие данные изменились
           //собрать массив роутов
           //и в каждый массив записать поля и измененные данные
           //потом в цикле обойти роуты и сохранить
           //выводя ошибки если есть
           //и вывести одно оповещение об успешном сохранении для всех роутов
-
-          //todo проверить какие поля изменились
 
           let saveFields = {};
           this._.map(this.fields, (field) => {
@@ -250,10 +267,6 @@
           });
           return saveFields;
         },
-        getChangeData(){
-            return {};
-        },
-
       },
 
       computed:{
