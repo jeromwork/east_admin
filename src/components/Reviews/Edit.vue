@@ -89,7 +89,7 @@
               md="6"
             >
               <e-select
-                v-if="fields['reviewable_id']"
+                v-if="fields['reviewable_id'] && editedItem['reviewable_type']"
                 v-model="editedItem['reviewable_id']"
                 label="Чей отзыв"
                 url="reviews/reviewable-id"
@@ -131,7 +131,7 @@
 
     // import MultiTags from "../../widgets/MultiTags/MultiTags";
     import ESelect from "@/widgets/ESelect/ESelect"
-    import _ from "lodash";
+    // import _ from "lodash";
 
     export default {
         name: "Edit",
@@ -195,21 +195,32 @@
           save(){
               this.$emit('close');
               this.saveSuccess = true
+
               //обходим настройки полей.
               //если видим у поля настройки сохранения, и таких настроек еще не было, формируем новый объект
               //если настройки уже были, значит добавляем данные для сохранения
               //отправляем данные для сохранения, только в том случае, если для такого поля был url для сохранения
               let saveData = this.getSaveData();
               //сначала сохраняем основную модель, потом остальные модели
-              if(saveData[this.urlApi]){
-                  this.createModel(saveData[this.urlApi], this.urlApi );
-                  delete saveData[this.urlApi];
-              }
-              if(Object.keys(saveData).length > 0){
-                  _.each(saveData, (data, url) => {
-                    this.updateModel(data, url);
-                  });
-              }
+
+
+
+            //todo потом как понадобится можно сделать множественное сохранение для разных моделей
+
+            if(this.item?.id){
+              this.updateModel(saveData, this.urlApi);
+            }else{
+              this.createModel(saveData, this.urlApi );
+            }
+              // if(saveData[this.urlApi]){
+              //     this.createModel(saveData[this.urlApi], this.urlApi );
+              //     delete saveData[this.urlApi];
+              // }
+              // if(Object.keys(saveData).length > 0){
+              //     _.each(saveData, (data, url) => {
+              //       this.updateModel(data, url);
+              //     });
+              // }
             return;
         },
 
@@ -251,15 +262,11 @@
           //потом в цикле обойти роуты и сохранить
           //выводя ошибки если есть
           //и вывести одно оповещение об успешном сохранении для всех роутов
-
           let saveFields = {};
           this._.map(this.fields, (field) => {
-            let url = (field.server?.urlSet) ? field.server.urlSet: this.urlApi;
-            if(url && field.value && JSON.stringify(this.editedItem[field.value]) !== JSON.stringify(this.item[field.value])){
-              if(!saveFields[url]){
-                saveFields[url] = {};
-              }
-              saveFields[url][field.value] = this.editedItem[field.value];
+
+            if(JSON.stringify(this.editedItem[field]) !== JSON.stringify(this.item[field])){
+              saveFields[field] = this.editedItem[field];
             }
           });
           return saveFields;

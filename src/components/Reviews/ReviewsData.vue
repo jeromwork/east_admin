@@ -28,14 +28,14 @@
 
       </e-table>
 
-      <e-edit :toogle="showEditDialog"
+      <edit :toogle="showEditDialog"
               @close="showEditDialog=false"
               @save="savedItemUpdateDataTable"
               :fields="eEditFields"
               :item="currentEditItem"
               urlApi="reviews"
       >
-      </e-edit>
+      </edit>
 
     </v-card>
   </v-container>
@@ -44,12 +44,12 @@
 
 <script>
   import ETable from "../../widgets/ETable/ETable";
-  import EEdit from "./Edit";
+  import Edit from "./Edit";
 
   export default {
         name: "ReviewsData",
         components: {
-          'e-edit' : EEdit,
+          'edit' : Edit,
           'e-table' : ETable,
         },
         data: ()=>({

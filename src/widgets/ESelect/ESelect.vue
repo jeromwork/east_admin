@@ -1,16 +1,14 @@
 <template>
 
-    <v-autocomplete
+    <v-select
             hide-selected
             outlined
-            small-chips
             :loading="loading"
             v-model="model"
             :items="itemsLocal"
 
             :disabled="disabled"
             @focus="getItems"
-            :deletable-chips="true"
             :auto-select-first="true"
             :search-input.sync="search"
             :menu-props="{ offsetY: true, }"
@@ -20,7 +18,8 @@
             :loader-height="10"
             :cache-items="true"
             @input="onInput"
-    ></v-autocomplete>
+            item-value="id"
+    ></v-select>
 
 </template>
 
@@ -87,6 +86,7 @@
               //console.log('created')
 
               this.$store.commit(`${this.storeName}/SET_IDS`, this.model);
+              this.getItems();
             }
           },
 
