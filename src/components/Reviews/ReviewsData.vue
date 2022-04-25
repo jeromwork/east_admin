@@ -44,7 +44,7 @@
 
 <script>
   import ETable from "../../widgets/ETable/ETable";
-  import EEdit from "../../widgets/EEdit/EEdit";
+  import EEdit from "./Edit";
 
   export default {
         name: "ReviewsData",
@@ -72,9 +72,7 @@
         },
         eEditFields:{
           get(){
-            // let editFields = this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
-            // console.log(editFields)
-            return  this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
+            return  this.$store.getters['Access/accessRules']('ReviewsEdit');
           },
         },
       },

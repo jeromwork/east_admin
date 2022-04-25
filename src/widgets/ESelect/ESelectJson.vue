@@ -44,11 +44,16 @@
         name: 'ESelect',
           props: {
             value:{required: false},
-            url:{type:String, required: true},
+            server:{
+                urlGet : {type:String|Array, required: false},
+                urlSet: {type:String, required: false},
+              required:true,
+            },
+            url:{type:String, required: false},
+            settings:{type:Object},//В этот проп можно напрямую передать параметры, тогда не надо их прописывать при вызове ESelect
             items:{required: false},
             field:{type:String},
             label:{type:String},
-            requestData:{type:Object},
             dense:{type:Boolean, default:false},
         },
 
@@ -124,20 +129,20 @@
             },
         },
       methods: {
+
           initStoreModule(){
               //при запуске компонента, создается новый vuex модуль, с уникальным именем
               //соответственно мутации и комиты будут через это уникальное имя модуля
-
-              this.storeName = `MultiTags_${this.url}`.replace('/', '_');
+              this.storeName = `MultiTags_${this.server.urlGet}`;
               if(!store.hasModule(this.storeName)){
                   store.registerModule(this.storeName, {
                       ...SelectOptions,
+                      //component: this.server.component,
                       namespaced: true,
                   });
               }
-
               this.$store.commit(this.storeName + '/SET_STORE_OPTIONS', {
-                  url:this.url,
+                  url:this.server.urlGet,
                   storeName:this.storeName,
               });
 
@@ -149,10 +154,8 @@
               console.log('onOpen')
           },
           getItems(searchKey){
-            console.log(this.storeName)
-            console.log(store)
             if(this.items){ return this.items;}
-            this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
+            this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey});
           },
       },
 
