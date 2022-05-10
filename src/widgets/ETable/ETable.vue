@@ -10,7 +10,14 @@
       :server-items-length="totalCountItems"
       @update:options="setOptions"
       @dblclick:row="dblclickRow"
+      :loading="loading"
     >
+      <template v-for="slotName in Object.keys($scopedSlots)"
+                v-slot:[slotName]="slotScope">
+        <slot :name="slotName" v-bind="slotScope"></slot>
+      </template>
+
+
 
 
       <template
@@ -70,7 +77,7 @@
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
-    import MultiTags from "../../components/MultiTags/MultiTags";
+    import MultiTags from "../../widgets/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
     import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
 
@@ -106,7 +113,9 @@
         },
         data: function () {return {
           storeName: '',
-
+          calories:'',
+          search:'',
+          loading:false,
         };},
       created() {
         this.initStoreModule();
@@ -129,10 +138,12 @@
 
         },
         getItems(){
-          this.$store.dispatch(this.storeName + '/GET_ITEMS');
+          this.loading = true;
+          this.$store.dispatch(this.storeName + '/GET_ITEMS').then(() => {
+              this.loading = false;
+          });
         },
         setOptions(options){
-          console.log(options)
           this.$store.commit(this.storeName + '/SET_OPTIONS', options);
           this.getItems();
         },

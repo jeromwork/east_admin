@@ -1,42 +1,61 @@
 <template>
-  <div>
-<!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
-    <e-table
-      urlApi="reviews"
-      dense
-      item-key="id"
-      @editItem="editItem"
-      :fields="eTableFields"
+  <v-container fluid>
+    <v-card>
+      <!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
+      <e-table
+        urlApi="reviews"
+        dense
+        item-key="id"
+        @editItem="editItem"
+        :fields="eTableFields"
+        :refreshItems="refreshItems"
+        @refreshedItems="refreshItems=[]"
 
-      :refreshItems="refreshItems"
-      @refreshedItems="refreshItems=[]"
-    ></e-table>
+      >
+        <template v-slot:top>
+<!--          В top нужно добавить кнопку создания сущности и панель фильтрации-->
+          <v-btn
+            elevation="2"
+            raised
+            @click="editItem($event, {})"
+          >Новый отзыв</v-btn>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            class="mx-4"
+          ></v-text-field>
+        </template>
 
-      <e-edit :toogle="showEditDialog"
+      </e-table>
+
+      <edit :toogle="showEditDialog"
               @close="showEditDialog=false"
               @save="savedItemUpdateDataTable"
               :fields="eEditFields"
               :item="currentEditItem"
               urlApi="reviews"
       >
-      </e-edit>
+      </edit>
 
-  </div>
+    </v-card>
+  </v-container>
+
 </template>
 
 <script>
   import ETable from "../../widgets/ETable/ETable";
-  import EEdit from "../../widgets/EEdit/EEdit";
+  import Edit from "./Edit";
 
   export default {
         name: "ReviewsData",
         components: {
-          'e-edit' : EEdit,
+          'edit' : Edit,
           'e-table' : ETable,
         },
         data: ()=>({
             items:{},
-
+          search:'',
+          calories:'',
             showEditDialog:false,
             currentEditItem : {},
           refreshItems:[],
@@ -53,9 +72,7 @@
         },
         eEditFields:{
           get(){
-            // let editFields = this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
-            // console.log(editFields)
-            return  this.$store.getters['Access/getAllowedFields']('ReviewsEdit');
+            return  this.$store.getters['Access/accessRules']('ReviewsEdit');
           },
         },
       },
@@ -64,9 +81,9 @@
           this.showEditDialog = true
           this.currentEditItem = item;
         },
-        savedItemUpdateDataTable(e, id){
+        savedItemUpdateDataTable(id){
           //this.showEditDialog=false;
-          // console.log(id)
+           console.log(id)
           //после сохранения сущности, обновляем с сервера только одну эту сущность
           this.refreshItems = [id];
         },

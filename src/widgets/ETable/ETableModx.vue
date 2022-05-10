@@ -67,7 +67,7 @@
     import ECheckbox from "../ECheckbox/ECheckbox";
     import store from '../../store'
     import ETable from '../../store/modules/ETable/ETable'
-    import MultiTags from "../../components/MultiTags/MultiTags";
+    import MultiTags from "../../widgets/MultiTags/MultiTags";
     //const {state:  stateModule,getters, mutations} = ETable
 
     export default {

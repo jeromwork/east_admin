@@ -9,10 +9,7 @@ export default {
     storeName:'',
     serverSettings:{
       storeName:'',
-      component:'',
-      itemsName:'',
-      actionGet:'',
-
+      url:'',
     },
     requestOptions:{fields:['id', 'name']},
     selectItems:[],
@@ -21,13 +18,14 @@ export default {
 
   mutations: {
     SET_STORE_OPTIONS(state, options){
-      if(!options.storeName || !options.component || !options.itemsName || !options.actionGet){
+      if(!options.storeName || !options.url){
         throw new Error('Неправильный массив опций, для настройки модуля MultiTags.js');
       }
       state.serverSettings = { ...options };
       state.storeName = options.storeName;
     },
     SET_IDS(state, ids) {
+      console.log(ids)
       _.map(ids, (id) => {
         state.ids[id] = id;
       });
@@ -77,13 +75,13 @@ export default {
       }
       this.$http.post(this.$http.CONNECTOR_URL, requestData )
           .then(response => {this.info = response
-            if(!response.data || !response.data.data)
+            if(!response.data || !response.data.items || !response.data.count)
             {
               console.log('Проверьте структуру данных Специальностей');
               return;
             }
             //console.log(response.data.items)
-             this.commit(state.storeName + '/FILL_ITEMS', response.data.data);
+             this.commit(state.storeName + '/FILL_ITEMS', response.data.items);
           });
     }
   },

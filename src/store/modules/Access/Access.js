@@ -90,7 +90,7 @@ const Access = {
             return state.accessLists[component];
         },
         accessRules: state => (component) =>{
-            return state.accessRules[component];
+            return {...state.accessRules[component]};
           },
         getAllowedFields: state =>(listName, rulesName) =>{
           rulesName = (!rulesName && listName) ? listName : rulesName;

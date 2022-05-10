@@ -77,13 +77,13 @@ export default {
       }
       this.$http.post(this.$http.CONNECTOR_URL, requestData )
           .then(response => {this.info = response
-            if(!response.data || !response.data.data)
+            if(!response.data || !response.data.items || !response.data.count)
             {
               console.log('Проверьте структуру данных Специальностей');
               return;
             }
             //console.log(response.data.items)
-             this.commit(state.storeName + '/FILL_ITEMS', response.data.data);
+             this.commit(state.storeName + '/FILL_ITEMS', response.data.items);
           });
     }
   },

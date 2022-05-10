@@ -1,7 +1,7 @@
 import _ from 'lodash';
 export default {
   namespaced:true,
-  state: {
+  state() {return {
     ids:{},
     items:[
     ],
@@ -9,23 +9,24 @@ export default {
     storeName:'',
     serverSettings:{
       storeName:'',
-      component:'',
-      itemsName:'',
-      actionGet:'',
-
+      url:'',
     },
+    url: '',
     requestOptions:{fields:['id', 'name']},
     selectItems:[],
-  },
+  }},
 //===========================================================
 
   mutations: {
     SET_STORE_OPTIONS(state, options){
-      if(!options.storeName || !options.component || !options.itemsName || !options.actionGet){
-        throw new Error('Неправильный массив опций, для настройки модуля MultiTags.js');
+      if(!options.storeName || !options.url){
+        throw new Error('Неправильный массив опций, для настройки модуля SelectOptions.js');
       }
-      state.serverSettings = { ...options };
+      //state = {...state,  ...options};
+
+      console.log({...state})
       state.storeName = options.storeName;
+      state.url = options.url;
     },
     SET_IDS(state, ids) {
       _.map(ids, (id) => {
@@ -34,7 +35,7 @@ export default {
 
     },
     FILL_ITEMS(state, data){
-      if(!Array.isArray(data) || !data[0]['id']){
+      if(!Array.isArray(data)){
         throw new Error('Неправильная структура данных с сервера. Должен быть массив и каждый элемент содержать поле id');
       }
 
@@ -62,22 +63,12 @@ export default {
       state.ids = {};
     },
     async getItemsFromServer({state}, data){
-
-      let requestData = {
-        // action:  this.serverSettings.item + '/' + this.serverSettings.getAction,
-        action:  state.serverSettings.actionGet,
-        component:state.serverSettings.component,
-        requestOptions:{
-          fields:(state.serverSettings.fields) ? state.serverSettings.fields : ['id', 'name'],
-        },
-      };
+      let requestData = { };
       if(data && data.ids && _.values(data.ids).length > 0 ){requestData.ids = _.values(data.ids);}
-      if(data && data.searchKey && data.searchKey !== ''){
-        requestData.search = data.searchKey;
-      }
-      this.$http.post(this.$http.CONNECTOR_URL, requestData )
+
+      this.$http.get('api/' + state.url, {params:{...data, ...requestData}} )
           .then(response => {this.info = response
-            if(!response.data || !response.data.data)
+            if( !response.data || !response.data.data )
             {
               console.log('Проверьте структуру данных Специальностей');
               return;
