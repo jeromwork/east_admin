@@ -68,6 +68,8 @@
           :key="header.value"
           :item="item"
           :renderSettings="header.render"
+          :urlApi="urlApi"
+          @removedItem="uploadItems()"
         />
       </template>
 
@@ -127,7 +129,9 @@
         this.initStoreModule();
       },
       methods: {
-
+        uploadItems(){
+          this.$store.dispatch(this.storeName + '/GET_ITEMS');
+        },
         initStoreModule(){
           //при запуске компонента, создается новый vuex модуль, с уникальным именем
           //соответственно мутации и комиты будут через это уникальное имя модуля
@@ -209,6 +213,7 @@
             }
             return this.$store.getters[this.storeName + "/getRefreshedItems"];
           },
+
         },
 
 

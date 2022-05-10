@@ -65,7 +65,17 @@
 <script>
   //todo При клике на кнопку, появляется диалоговое окно, и после закрытия, не убирается подсветка кнопки и tooltip
     export default {
-        name: "deleteItem",
+        name: "DeleteItem",
+      props:{
+        itemId:{
+          type:Number,
+          required:true,
+        },
+        urlApi:{
+          type:String,
+          required:true,
+        },
+      },
       data:() =>({
         confirmDialog : false,
         dialog:false,
@@ -74,8 +84,24 @@
         removeItem(){
 
           this.confirmDialog = false;
-          this.$emit('removeItem');
+          this.$http.delete('api/' + this.urlApi + '/' + this.itemId)
+            .then(response => {
+              this.handRequestFromServer(response);
+            });
         },
+        handRequestFromServer(response){
+          //todo сделать вывод success & error
+          if(response.data && response.data.ok){
+            this.lastMessageFromServer = 'Сохранение прошло успешно!';
+            if(this.itemId){
+              this.$emit('removedItem', this.itemId);
+            }
+
+          }else{
+            console.log('Ошибка сохранения сущности')
+          }
+        },
+
       },
     }
 </script>

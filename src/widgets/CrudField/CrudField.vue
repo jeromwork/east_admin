@@ -2,7 +2,9 @@
 <div>
   <delete-item
   v-if="actionDelete"
-  @removeItem="removeItem"
+  @removedItem="removedItem"
+  :urlApi="urlApi"
+  :item-id="item.id"
   />
 
 
@@ -10,11 +12,11 @@
 </template>
 
 <script>
-  import deleteItem from '@/widgets/deleteItem/deleteItem';
+  import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
     export default {
         name: "CrudField",
       components:{
-        'delete-item' : deleteItem,
+        'delete-item' : DeleteItem,
       },
       props:{
           item:{
@@ -23,6 +25,10 @@
           },
         renderSettings:{
             type:Object,
+          required:true,
+        },
+        urlApi:{
+          type:String,
           required:true,
         },
       },
@@ -35,7 +41,8 @@
         },
       },
       methods:{
-        removeItem(){
+        removedItem(){
+          this.$emit('removedItem');
           console.log(';removeItem')
         }
       },
