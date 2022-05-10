@@ -63,8 +63,12 @@
           :label="header.render.label"
 
         />
-
-
+        <crud-field
+          v-if="header.render && header.render.type == 'crud'"
+          :key="header.value"
+          :item="item"
+          :renderSettings="header.render"
+        />
       </template>
 
     </v-data-table>
@@ -80,6 +84,7 @@
     import MultiTags from "../../widgets/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
     import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
+    import CrudField from "@/widgets/CrudField/CrudField"
 
     //const {state:  stateModule,getters, mutations} = ETable
 
@@ -89,6 +94,7 @@
         'multi-tags' : MultiTags,
         TextFieldAutoSave : TextFieldAutoSave,
         TextareaAutoSave:TextareaAutoSave,
+        'crud-field' : CrudField,
       },
         name: "ETable",
         props: {
@@ -187,6 +193,7 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.render; });
+            console.log(headers)
             return headers;
           },
         },
