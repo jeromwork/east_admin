@@ -213,7 +213,6 @@
             }
             return this.$store.getters[this.storeName + "/getRefreshedItems"];
           },
-
         },
 
 
