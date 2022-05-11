@@ -63,8 +63,20 @@
           :label="header.render.label"
 
         />
-
-
+        <actions-field
+          v-if="header.render && header.render.type == 'crud'"
+          :key="header.value"
+          :item="item"
+          :renderSettings="header.render"
+          :urlApi="urlApi"
+          @removedItem="uploadItems()"
+        />
+        <rating
+          v-if="header.render && header.render.type == 'rating'"
+          :key="header.value"
+          v-model="item.rating"
+          :moment-save="header.momentSave"
+        />
       </template>
 
     </v-data-table>
@@ -80,6 +92,8 @@
     import MultiTags from "../../widgets/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
     import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
+    import ActionsField from "@/widgets/ETable/ActionsField/ActionsField"
+    import Rating from "@/widgets/Rating/Rating"
 
     //const {state:  stateModule,getters, mutations} = ETable
 
@@ -89,6 +103,8 @@
         'multi-tags' : MultiTags,
         TextFieldAutoSave : TextFieldAutoSave,
         TextareaAutoSave:TextareaAutoSave,
+        'actions-field' : ActionsField,
+        'rating' : Rating
       },
         name: "ETable",
         props: {
@@ -121,7 +137,9 @@
         this.initStoreModule();
       },
       methods: {
-
+        uploadItems(){
+          this.$store.dispatch(this.storeName + '/GET_ITEMS');
+        },
         initStoreModule(){
           //при запуске компонента, создается новый vuex модуль, с уникальным именем
           //соответственно мутации и комиты будут через это уникальное имя модуля
@@ -187,6 +205,7 @@
           get(){
             let headers = this._.filter(this.getTableHeadItems, function(h) {
               return h.render; });
+            console.log(headers)
             return headers;
           },
         },

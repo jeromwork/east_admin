@@ -83,6 +83,8 @@
                 url="reviews/reviewable-type"
                 label="Тип отзыва"
                 dense
+                store-module="Reviews"
+                :items="reviewableTypes()"
               ></e-select>
             </v-col>
             <v-col
@@ -94,6 +96,7 @@
                 label="Чей отзыв"
                 url="reviews/reviewable-id"
                 :requestData="{reviewable_type:editedItem['reviewable_type']}"
+                store-module="Doctors"
               ></e-select>
             </v-col>
             </v-row>
@@ -129,9 +132,9 @@
 
 <script>
 
-    // import MultiTags from "../../widgets/MultiTags/MultiTags";
     import ESelect from "@/widgets/ESelect/ESelect"
     // import _ from "lodash";
+
 
     export default {
         name: "Edit",
@@ -270,6 +273,9 @@
             }
           });
           return saveFields;
+        },
+        reviewableTypes (){
+          return this.$store.getters[ "Reviews/getReviewableTypes"];
         },
       },
 

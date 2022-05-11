@@ -34,7 +34,8 @@
 
     *
     * */
-  import store from "@/store";
+  import store from "../../store";
+  import SelectOptions from '../../store/modules/Select/SelectOptionsFromServer'
 
 
   export default {
@@ -48,15 +49,13 @@
             label:{type:String},
             requestData:{type:Object},
             dense:{type:Boolean, default:false},
-            storeModule:{type:String},
-            urlSet:{type:String},
-            momentSave: {type:Boolean, default:false},
         },
 
         components: {
 
         },
         data: () => ({
+            //value:[],
             values: {} ,
             select:null,
             info:{},
@@ -82,13 +81,8 @@
             //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
             //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
 
-            console.log(this.items)
-            if(this.storeModule){
-              console.log(this.$store.hasModule(this.storeModule))
-            }
-
             if(!this.items) {
-
+              this.initStoreModule();
               //console.log('created')
 
               this.$store.commit(`${this.storeName}/SET_IDS`, this.model);
@@ -130,7 +124,24 @@
             },
         },
       methods: {
+          initStoreModule(){
+              //при запуске компонента, создается новый vuex модуль, с уникальным именем
+              //соответственно мутации и комиты будут через это уникальное имя модуля
 
+              this.storeName = `MultiTags_${this.url}`.replace('/', '_');
+              if(!store.hasModule(this.storeName)){
+                  store.registerModule(this.storeName, {
+                      ...SelectOptions,
+                      namespaced: true,
+                  });
+              }
+
+              this.$store.commit(this.storeName + '/SET_STORE_OPTIONS', {
+                  url:this.url,
+                  storeName:this.storeName,
+              });
+
+          },
           onInput(val){
               this.$emit('input', val);
           },

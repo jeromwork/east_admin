@@ -12,6 +12,7 @@ import HealthSettings from "./modules/HealthSettings/HealthSettings";
 import SpecialsSettings from "./modules/HealthSettings/SpecialsSettings";
 import Reviews from "./modules/Reviews/Reviews";
 import Access from './modules/Access/Access'
+import Doctors from './modules/Doctors/Doctors'
 //import AccessSocketPlugin from "./plugins/webSockets/Access";
 
 
@@ -31,6 +32,7 @@ export default new Vuex.Store({
       HealthSettings,
     Reviews,
       Access,
+    Doctors,
   },
     //plugins:[APlugin]
 

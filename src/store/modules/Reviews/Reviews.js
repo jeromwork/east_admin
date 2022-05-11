@@ -3,6 +3,7 @@
 //так же еще будут настройки какие поля отображать (потом можно будет вынести эти настройки в одтельный компонент)
 //items нужно получать с сервера
 
+import {getTypes} from '@/store/api/Reviews'
 
 export default {
   namespaced:true,
@@ -16,8 +17,12 @@ export default {
     page:1,
     countOfPage:10,
     requestOptions:{page:1, itemsPerPage:10},
+    reviewableTypes:[{id :'doctorReview', text:'Доктор'}],
   },
   mutations:{
+    FILL_REVIEWABLE_TYPES(state, types){
+      state.reviewableTypes = types;
+    },
     FILL_SPECIALS(state, specials){
       state.specials = specials;
     },
@@ -63,10 +68,17 @@ export default {
           this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
         });
     },
+    async getTypes(){
+      getTypes(this);
+    },
+
   },
   getters: {
     count :state => {
       return state.count;
+    },
+    getReviewableTypes : (state) => {
+      return state.reviewableTypes;
     }
 
   },
