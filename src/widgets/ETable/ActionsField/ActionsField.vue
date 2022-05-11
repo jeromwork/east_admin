@@ -14,7 +14,7 @@
 <script>
   import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
     export default {
-        name: "CrudField",
+        name: "ActionsField",
       components:{
         'delete-item' : DeleteItem,
       },

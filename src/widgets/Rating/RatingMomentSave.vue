@@ -1,7 +1,6 @@
 <template>
   <v-rating
-    @input="setRating"
-    :value="value"
+    v-model="rating"
     hover
     length="5"
     half-increments
@@ -12,21 +11,13 @@
     export default {
         name: "Rating",
       props:{
-        value:{
+        rating:{
           type:Number
-        },
-        momentSave:{
-          required:false,
-        },
+        }
       },
       data : () => ({
 
       }),
-      methods:{
-        setRating(val){
-          console.log(val)
-        },
-      },
     }
 </script>
 
