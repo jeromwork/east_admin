@@ -1,11 +1,13 @@
 <template>
 
-    <v-select
+    <v-autocomplete
             hide-selected
             outlined
             :loading="loading"
             v-model="model"
             :items="itemsLocal"
+
+            :disabled="disabled"
             :auto-select-first="true"
             :menu-props="{ offsetY: true, }"
             :search-input="search"
@@ -16,8 +18,7 @@
             :cache-items="true"
             @input="onInput"
             item-value="id"
-            v-bind="properties"
-    ></v-select>
+    ></v-autocomplete>
 
 </template>
 
@@ -26,13 +27,6 @@
 
 
 <script>
-
-
-    /*
-
-    *
-    * */
-
 
 // import _ from 'lodash';
   export default {
@@ -69,7 +63,6 @@
             search: null,
             storeName:'',
             defaultValues:[],
-          properties:{},
         }),
 
           mounted() {
@@ -81,10 +74,10 @@
             //в mounted идет обращение на сервер, что бы выдали title тэгов по их ids.
             //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
             //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
-            this.properties = {...this.$options.propsData, ...this.$attrs}
-            if(!this.items) {
-              this.getItems();
-            }
+
+            // if(!this.items) {
+            //   this.getItems();
+            // }
           },
 
 
@@ -106,7 +99,6 @@
 
         },
         computed:{
-
           itemsLocal : {
             get(){
               if(this.dispatchStore && this.dispatchStore.getItems ){
@@ -136,12 +128,12 @@
           onOpen(){
               console.log('onOpen')
           },
-          getItems(searchKey){
-            console.log(searchKey)
-            console.log('сделать поиск по items')
-            // if(this.items){ return this.items;}
-            // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
-          },
+          // getItems(searchKey){
+          //   console.log(searchKey)
+          //   console.log('сделать поиск по items')
+          //   // if(this.items){ return this.items;}
+          //   // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
+          // },
       },
 
 
