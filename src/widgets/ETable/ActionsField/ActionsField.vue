@@ -23,21 +23,26 @@
             type:Object,
             required:true,
           },
-        renderSettings:{
-            type:Object,
-          required:true,
-        },
         urlApi:{
           type:String,
           required:true,
         },
+        actions:{type:String,
+          required:false,}
       },
       data : () => ({
 
       }),
+      created() {
+
+      },
       computed:{
         actionDelete(){
-          return (this.renderSettings.actions?.indexOf('d') > -1)
+          console.log(this)
+          return (this.actions?.indexOf('delete') > -1)
+        },
+        actionPublication(){
+          return (this.actions?.indexOf('publication') > -1)
         },
       },
       methods:{

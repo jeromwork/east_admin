@@ -82,7 +82,6 @@
                 v-model="editedItem['reviewable_type']"
                 url="reviews/reviewable-type"
                 label="Тип отзыва"
-                dense
                 :items="reviewableTypes()"
                 :dispatchStore="{getItems:'Reviews/getReviewableTypes'}"
               ></e-select>

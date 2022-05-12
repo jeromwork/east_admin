@@ -64,10 +64,10 @@
 
         />
         <actions-field
-          v-if="header.render && header.render.type == 'actions'"
+          v-if="header.render && header.render == 'actions'"
           :key="header.value"
+          v-bind="header.props"
           :item="item"
-          :renderSettings="header.render"
           :urlApi="urlApi"
           @removedItem="uploadItems()"
         />
