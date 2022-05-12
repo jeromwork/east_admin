@@ -15,7 +15,7 @@ export default {
   },
   actions:{
     async init(){
-      initStoreData(this);
+      initStoreData(this, {itemsPerPage:1000});
     },
   },
 

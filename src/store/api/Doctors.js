@@ -1,6 +1,6 @@
 export async function initStoreData(store, requestData){
-
-  store.$http.get('api/doctors', requestData)
+  console.log(requestData)
+  store.$http.get('api/doctors', {params: requestData})
     .then(response => {
       console.log(response.data);
       if(response.data.data){
