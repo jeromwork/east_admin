@@ -83,8 +83,8 @@
                 url="reviews/reviewable-type"
                 label="Тип отзыва"
                 dense
-                store-module="Reviews"
                 :items="reviewableTypes()"
+                :dispatchStore="{getItems:'Reviews/getReviewableTypes'}"
               ></e-select>
             </v-col>
             <v-col

@@ -17,9 +17,13 @@ export default {
     page:1,
     countOfPage:10,
     requestOptions:{page:1, itemsPerPage:10},
-    reviewableTypes:[{id :'doctorReview', text:'Доктор'}],
+    reviewableTypes:[],
+    dataIsInit : false,
   },
   mutations:{
+    DATA_IS_INIT(state){
+      state.dataIsInit = true;
+    },
     FILL_REVIEWABLE_TYPES(state, types){
       state.reviewableTypes = types;
     },
@@ -45,6 +49,16 @@ export default {
     },
   },
   actions:{
+    init({state}){
+      if(!state.dataIsInit){
+        console.log(this)
+
+        this.dispatch('Reviews/getTypes');
+        this.commit('Reviews/DATA_IS_INIT');
+      }
+
+    },
+
     async getReviews({state}){
 
       let requestData = {

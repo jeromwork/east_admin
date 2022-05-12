@@ -20,7 +20,7 @@ Vue.use(Vuex)
 
 //const APlugin = AccessSocketPlugin( new WebSocket('ws://127.0.0.1:61523'));
 
-export default new Vuex.Store({
+ const _store = new Vuex.Store({
   modules: {
       Login,
       doctorSettings,
@@ -36,7 +36,11 @@ export default new Vuex.Store({
   },
     //plugins:[APlugin]
 
-})
+});
+
+
+export default _store;
+
 // window._ = require('lodash');
 
 

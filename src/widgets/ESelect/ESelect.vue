@@ -34,7 +34,7 @@
 
     *
     * */
-  import store from "@/store";
+
 
 
   export default {
@@ -51,6 +51,10 @@
             storeModule:{type:String},
             urlSet:{type:String},
             momentSave: {type:Boolean, default:false},
+            dispatchStore:{type:Object,
+
+            getItems:{type:String}
+            }
         },
 
         components: {
@@ -116,8 +120,14 @@
         computed:{
           itemsLocal : {
             get(){
-              if(this.items){ return this.items;}
-              return this.$store.getters[`${this.storeName}/getItems`]
+              if(this.dispatchStore && this.dispatchStore.getItems ){
+                if(!(this.dispatchStore.getItems in this.$store.getters)){
+                  console.log('Нет такого геттера '+ this.dispatchStore.getItems + ', в store.getters');
+                }
+                return this.$store.getters[this.dispatchStore.getItems]
+              }else{
+                return [];
+              }
             }
           },
             model: {
@@ -138,8 +148,7 @@
               console.log('onOpen')
           },
           getItems(searchKey){
-            console.log(this.storeName)
-            console.log(store)
+
             if(this.items){ return this.items;}
             this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
           },

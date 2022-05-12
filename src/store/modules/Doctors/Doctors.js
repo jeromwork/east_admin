@@ -1,4 +1,4 @@
-import {initStoreData} from '@/store/api/doctors.js'
+import {initStoreData} from '@/store/api/Doctors.js'
 //для сущностей store можно завести списки доступа, и отдавать доступные данные
 export default {
   namespaced:true,
@@ -14,7 +14,7 @@ export default {
     },
   },
   actions:{
-    async initStoreData(){
+    async init(){
       initStoreData(this);
     },
   },
