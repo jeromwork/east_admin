@@ -8,7 +8,6 @@
             :items="itemsLocal"
 
             :disabled="disabled"
-            @focus="getItems"
             :auto-select-first="true"
             :search-input.sync="search"
             :menu-props="{ offsetY: true, }"
@@ -36,13 +35,13 @@
     * */
 
 
-
+import _ from 'lodash';
   export default {
 
         name: 'ESelect',
           props: {
             value:{required: false},
-            url:{type:String, required: true},
+            url:{type:String, required: false},
             items:{required: false},
             field:{type:String},
             label:{type:String},
@@ -92,10 +91,6 @@
             }
 
             if(!this.items) {
-
-              //console.log('created')
-
-              this.$store.commit(`${this.storeName}/SET_IDS`, this.model);
               this.getItems();
             }
           },
@@ -124,7 +119,9 @@
                 if(!(this.dispatchStore.getItems in this.$store.getters)){
                   console.log('Нет такого геттера '+ this.dispatchStore.getItems + ', в store.getters');
                 }
-                return this.$store.getters[this.dispatchStore.getItems]
+                let f = _.values(this.$store.getters[this.dispatchStore.getItems]);
+                console.log(f)
+                return f;
               }else{
                 return [];
               }
@@ -148,9 +145,10 @@
               console.log('onOpen')
           },
           getItems(searchKey){
-
-            if(this.items){ return this.items;}
-            this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
+            console.log(searchKey)
+            console.log('сделать поиск по items')
+            // if(this.items){ return this.items;}
+            // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
           },
       },
 

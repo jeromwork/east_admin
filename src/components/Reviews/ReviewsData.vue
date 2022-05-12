@@ -63,7 +63,7 @@
 
       created() {
         this.$store.dispatch('Reviews/init');//инициализируем reviews из store
-        this.$store.dispatch('Doctors/init');//инициализируем reviews из store
+        this.$store.dispatch('Doctors/init');//инициализируем doctors из store
       },
       computed:{
         eTableFields:{

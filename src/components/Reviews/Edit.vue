@@ -94,9 +94,7 @@
                 v-if="fields['reviewable_id'] && editedItem['reviewable_type']"
                 v-model="editedItem['reviewable_id']"
                 label="Чей отзыв"
-                url="reviews/reviewable-id"
-                :requestData="{reviewable_type:editedItem['reviewable_type']}"
-                store-module="Doctors"
+                :dispatchStore="{getItems:'Doctors/getIdText'}"
               ></e-select>
             </v-col>
             </v-row>

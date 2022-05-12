@@ -1,4 +1,5 @@
 import {initStoreData} from '@/store/api/Doctors.js'
+import _ from 'lodash'
 //для сущностей store можно завести списки доступа, и отдавать доступные данные
 export default {
   namespaced:true,
@@ -8,9 +9,11 @@ export default {
   mutations: {
 
     FILL_ITEMS(state, items) {
-      items.forEach(function(item) {
-        state.doctors[item.id*1] = item;
+      let doctors = {}
+      items.forEach((item) => {
+        doctors[item.id*1] = item;
       });
+      state.doctors = doctors;
     },
   },
   actions:{
@@ -20,6 +23,14 @@ export default {
   },
 
   getters: {
+    get: state => {
+      return state.doctors;
+    },
+    getIdText : state => {
+      return _.map(state.doctors, (doctor) => {
+        return {id : doctor.id, text : doctor.fullname}
+      });
+    },
   },
 
 
