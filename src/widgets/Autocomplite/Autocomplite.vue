@@ -28,13 +28,6 @@
 
 <script>
 
-
-    /*
-
-    *
-    * */
-
-
 // import _ from 'lodash';
   export default {
 
@@ -82,9 +75,9 @@
             //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
             //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
 
-            if(!this.items) {
-              this.getItems();
-            }
+            // if(!this.items) {
+            //   this.getItems();
+            // }
           },
 
 
@@ -135,12 +128,12 @@
           onOpen(){
               console.log('onOpen')
           },
-          getItems(searchKey){
-            console.log(searchKey)
-            console.log('сделать поиск по items')
-            // if(this.items){ return this.items;}
-            // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
-          },
+          // getItems(searchKey){
+          //   console.log(searchKey)
+          //   console.log('сделать поиск по items')
+          //   // if(this.items){ return this.items;}
+          //   // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
+          // },
       },
 
 

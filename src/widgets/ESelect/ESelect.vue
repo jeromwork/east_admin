@@ -6,8 +6,6 @@
             :loading="loading"
             v-model="model"
             :items="itemsLocal"
-
-            :disabled="disabled"
             :auto-select-first="true"
             :menu-props="{ offsetY: true, }"
             :search-input="search"
@@ -18,6 +16,7 @@
             :cache-items="true"
             @input="onInput"
             item-value="id"
+            v-bind="pr"
     ></v-select>
 
 </template>
@@ -70,6 +69,7 @@
             search: null,
             storeName:'',
             defaultValues:[],
+          pr:{},
         }),
 
           mounted() {
@@ -81,7 +81,9 @@
             //в mounted идет обращение на сервер, что бы выдали title тэгов по их ids.
             //затем, при каждом обращении к серверу, кэшируются titles, Для отображения тэгов
             //v-model multiTags, выдает массив ids, который можно уже сохранить на сервере
-
+            console.log(this)
+            this.pr = {...this.$options.propsData, ...this.$attrs}
+            console.log(this.pr)
             if(!this.items) {
               this.getItems();
             }

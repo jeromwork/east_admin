@@ -64,13 +64,20 @@
 
         />
         <actions-field
-          v-if="header.render && header.render.type == 'crud'"
+          v-if="header.render && header.render.type == 'actions'"
           :key="header.value"
           :item="item"
           :renderSettings="header.render"
           :urlApi="urlApi"
           @removedItem="uploadItems()"
         />
+        <e-select
+          v-if="header.render && header.render == 'select'"
+          :key="header.value"
+          v-bind="header.props"
+          v-model="item[header.value]"
+        >
+        </e-select>
         <rating
           v-if="header.render && header.render.type == 'rating'"
           :key="header.value"
@@ -94,6 +101,7 @@
     import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
     import ActionsField from "@/widgets/ETable/ActionsField/ActionsField"
     import Rating from "@/widgets/Rating/Rating"
+    import ESelect from "@/widgets/ESelect/ESelect";
 
     //const {state:  stateModule,getters, mutations} = ETable
 
@@ -104,7 +112,8 @@
         TextFieldAutoSave : TextFieldAutoSave,
         TextareaAutoSave:TextareaAutoSave,
         'actions-field' : ActionsField,
-        'rating' : Rating
+        'rating' : Rating,
+        'e-select':ESelect
       },
         name: "ETable",
         props: {
