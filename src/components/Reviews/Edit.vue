@@ -90,12 +90,12 @@
             <v-col
               md="6"
             >
-              <e-select
+              <autocomplete
                 v-if="fields['reviewable_id'] && editedItem['reviewable_type']"
                 v-model="editedItem['reviewable_id']"
                 label="Чей отзыв"
                 :dispatchStore="{getItems:'Doctors/getIdText'}"
-              ></e-select>
+              ></autocomplete>
             </v-col>
             </v-row>
           </v-form>
@@ -132,6 +132,7 @@
 
     import ESelect from "@/widgets/ESelect/ESelect"
     // import _ from "lodash";
+    import Autocomplite from "@/widgets/Autocomplite/Autocomplite"
 
 
     export default {
@@ -139,6 +140,7 @@
       components: {
         // 'multi-tags' : MultiTags,
         'e-select' : ESelect,
+        'autocomplete' : Autocomplite,
       },
         props:{
           toogle:Boolean,

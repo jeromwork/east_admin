@@ -1,6 +1,6 @@
 <template>
 
-    <v-select
+    <v-autocomplete
             hide-selected
             outlined
             :loading="loading"
@@ -18,7 +18,7 @@
             :cache-items="true"
             @input="onInput"
             item-value="id"
-    ></v-select>
+    ></v-autocomplete>
 
 </template>
 
