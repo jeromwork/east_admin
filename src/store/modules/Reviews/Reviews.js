@@ -3,7 +3,7 @@
 //так же еще будут настройки какие поля отображать (потом можно будет вынести эти настройки в одтельный компонент)
 //items нужно получать с сервера
 
-import {getTypes} from '@/store/api/Reviews'
+import {getTypes, momentSave} from '@/store/api/Reviews'
 
 export default {
   namespaced:true,
@@ -57,6 +57,14 @@ export default {
         this.commit('Reviews/DATA_IS_INIT');
       }
 
+    },
+    async momentSave(store, data){
+      if(!data.id){
+        console.log('Не передан id')
+      }
+      let id = data.id;
+      delete data.id;
+      momentSave(this, id, data);
     },
 
     async getReviews({state}){

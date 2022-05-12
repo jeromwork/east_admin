@@ -90,7 +90,6 @@
 
         watch: {
             search(val) {
-              console.log(val)
                 this.getItems(val);
                 // Items have already been loaded
                 if (this.items.length > 0) return
@@ -136,9 +135,9 @@
           onOpen(){
               console.log('onOpen')
           },
-          getItems(searchKey){
-            console.log(searchKey)
-            console.log('сделать поиск по items')
+          getItems(){
+            // console.log(searchKey)
+            // console.log('сделать поиск по items')
             // if(this.items){ return this.items;}
             // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
           },

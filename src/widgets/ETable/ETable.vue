@@ -79,10 +79,12 @@
         >
         </e-select>
         <rating
-          v-if="header.render && header.render.type == 'rating'"
+          v-if="header.render && header.render == 'rating'"
           :key="header.value"
-          v-model="item.rating"
-          :moment-save="header.momentSave"
+          :itemId="item.id"
+          v-bind="header.props"
+          v-model="item[header.value]"
+          :field="header.value"
         />
       </template>
 

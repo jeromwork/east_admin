@@ -38,7 +38,7 @@
       },
       computed:{
         actionDelete(){
-          console.log(this)
+          // console.log(this)
           return (this.actions?.indexOf('delete') > -1)
         },
         actionPublication(){
