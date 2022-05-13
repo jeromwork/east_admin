@@ -76,6 +76,8 @@
           :key="header.value"
           v-bind="header.props"
           v-model="item[header.value]"
+          :field="header.value"
+          :itemId="item.id"
         >
         </e-select>
         <rating

@@ -11,8 +11,6 @@ export async function getTypes(store){
 }
 export async function momentSave(store, id, data){
 
-  console.log(data)
-
   store.$http.put('api/reviews/'+id, data)
     .then(response => {
       console.log(response.data);

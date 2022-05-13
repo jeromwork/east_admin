@@ -50,11 +50,12 @@
             urlSet:{type:String},
             momentSave: {type:Boolean, default:false},
             dispatchStore:{type:Object,
-
+            itemId:{ type:Number  },
+            field:{   type:String     },
             getItems:{type:String}
             }
         },
-
+    inheritAttrs: false,
         components: {
 
         },
@@ -120,9 +121,17 @@
           },
             model: {
                 get() {
+                  //console.log(this)
                     return this.value;
                 },
                 set(value) {
+                  let props = {...this.properties};
+
+                  if(props.momentSave && props.dispatchStore.momentSave && props.itemId && props.field){
+                    let data = {id:props.itemId};
+                    data[props.field] = value;
+                    this.$store.dispatch(props.dispatchStore.momentSave, data);
+                  }
                     this.$emit('input', value);
                 },
             },
