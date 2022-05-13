@@ -54,14 +54,13 @@
                 :label="header.render.label"
 
         />
-        <TextareaAutoSave
-          v-if="header.render && header.render.type == 'textarea'"
+        <e-textarea
+          v-if="header.render && header.render == 'textarea'"
           :key="header.value"
-          :url="urlApi"
+          v-bind="header.props"
+          v-model="item[header.value]"
+          :itemId="item.id"
           :field="header.value"
-          :item="item"
-          :label="header.render.label"
-
         />
         <actions-field
           v-if="header.render && header.render == 'actions'"
@@ -76,13 +75,17 @@
           :key="header.value"
           v-bind="header.props"
           v-model="item[header.value]"
+          :field="header.value"
+          :itemId="item.id"
         >
         </e-select>
         <rating
-          v-if="header.render && header.render.type == 'rating'"
+          v-if="header.render && header.render == 'rating'"
           :key="header.value"
-          v-model="item.rating"
-          :moment-save="header.momentSave"
+          :itemId="item.id"
+          v-bind="header.props"
+          v-model="item[header.value]"
+          :field="header.value"
         />
       </template>
 
@@ -98,7 +101,7 @@
     import ETable from '../../store/modules/ETable/ETable'
     import MultiTags from "../../widgets/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
-    import TextareaAutoSave from "../TextareaAutoSave/TextareaAutoSave"
+    import Textarea from "@/widgets/Textarea/Textarea"
     import ActionsField from "@/widgets/ETable/ActionsField/ActionsField"
     import Rating from "@/widgets/Rating/Rating"
     import ESelect from "@/widgets/ESelect/ESelect";
@@ -110,7 +113,7 @@
         'e-checkbox' : ECheckbox,
         'multi-tags' : MultiTags,
         TextFieldAutoSave : TextFieldAutoSave,
-        TextareaAutoSave:TextareaAutoSave,
+        'e-textarea':Textarea,
         'actions-field' : ActionsField,
         'rating' : Rating,
         'e-select':ESelect

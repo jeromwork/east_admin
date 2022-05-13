@@ -40,9 +40,7 @@
         name: 'ESelect',
           props: {
             value:{required: false},
-            url:{type:String, required: false},
             items:{required: false},
-            field:{type:String},
             label:{type:String},
             requestData:{type:Object},
             dense:{type:Boolean, default:false},
@@ -50,11 +48,12 @@
             urlSet:{type:String},
             momentSave: {type:Boolean, default:false},
             dispatchStore:{type:Object,
-
+            itemId:{ type:Number  },
+            field:{   type:String     },
             getItems:{type:String}
             }
         },
-
+    inheritAttrs: false,
         components: {
 
         },
@@ -90,7 +89,6 @@
 
         watch: {
             search(val) {
-              console.log(val)
                 this.getItems(val);
                 // Items have already been loaded
                 if (this.items.length > 0) return
@@ -121,9 +119,17 @@
           },
             model: {
                 get() {
+                  //console.log(this)
                     return this.value;
                 },
                 set(value) {
+                  let props = {...this.properties};
+
+                  if(props.momentSave && props.dispatchStore.momentSave && props.itemId && props.field){
+                    let data = {id:props.itemId};
+                    data[props.field] = value;
+                    this.$store.dispatch(props.dispatchStore.momentSave, data);
+                  }
                     this.$emit('input', value);
                 },
             },
@@ -136,9 +142,9 @@
           onOpen(){
               console.log('onOpen')
           },
-          getItems(searchKey){
-            console.log(searchKey)
-            console.log('сделать поиск по items')
+          getItems(){
+            // console.log(searchKey)
+            // console.log('сделать поиск по items')
             // if(this.items){ return this.items;}
             // this.$store.dispatch(`${this.storeName}/getItemsFromServer`, {searchKey:searchKey, ...this.requestData});
           },

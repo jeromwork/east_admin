@@ -16,7 +16,20 @@
           type:Number
         },
         momentSave:{
+          type:Boolean,
           required:false,
+        },
+        dispatchStore:{
+          type:Object
+        },
+        disabled:{
+          type:Boolean
+        },
+        itemId:{
+          type:Number
+        },
+        field:{
+          type:String
         },
       },
       data : () => ({
@@ -24,7 +37,11 @@
       }),
       methods:{
         setRating(val){
-          console.log(val)
+          if(this.momentSave && this.dispatchStore.momentSave && this.itemId && this.field){
+            let data = {id:this.itemId};
+            data[this.field] = val;
+            this.$store.dispatch(this.dispatchStore.momentSave, data, 33333);
+          }
         },
       },
     }
