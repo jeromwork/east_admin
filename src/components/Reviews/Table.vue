@@ -1,0 +1,80 @@
+<template>
+  <e-table
+    urlApi="reviews"
+    dense
+    item-key="id"
+    @editItem="editItem"
+    :fields="eTableFields"
+    :refreshItems="refreshItems"
+    @refreshedItems="refreshItems=[]"
+
+  >
+    <template v-slot:top>
+      <!--          В top нужно добавить кнопку создания сущности и панель фильтрации-->
+      <v-btn
+        elevation="2"
+        raised
+        @click="editItem($event, {})"
+      >Новый отзыв</v-btn>
+      <v-text-field
+        v-model="search"
+        label="Search"
+        class="mx-4"
+      ></v-text-field>
+    </template>
+
+  </e-table>
+</template>
+
+<script>
+  import ETable from "../../widgets/ETable/ETable";
+
+  export default {
+    name: "Table",
+    components: {
+      'e-table' : ETable,
+    },
+    data: ()=>({
+      items:{},
+      search:'',
+      calories:'',
+      showEditDialog:false,
+      currentEditItem : {},
+      refreshItems:[],
+    }),
+
+    created() {
+      this.$store.dispatch('Reviews/init');//инициализируем reviews из store
+      this.$store.dispatch('Doctors/init');//инициализируем doctors из store
+    },
+    computed:{
+      eTableFields:{
+        get(){
+          return  this.$store.getters['Access/getAllowedFields']('ReviewsTable');
+        },
+      },
+      eEditFields:{
+        get(){
+          return  this.$store.getters['Access/accessRules']('ReviewsEdit');
+        },
+      },
+    },
+    methods:{
+      editItem(e, item){
+        this.showEditDialog = true
+        this.currentEditItem = item;
+      },
+      savedItemUpdateDataTable(id){
+        //this.showEditDialog=false;
+        console.log(id)
+        //после сохранения сущности, обновляем с сервера только одну эту сущность
+        this.refreshItems = [id];
+      },
+    },
+
+
+  }
+</script>
+<style scoped>
+
+</style>
