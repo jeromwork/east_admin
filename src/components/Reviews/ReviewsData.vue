@@ -4,7 +4,6 @@
       <!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
       <reviews-table
         urlApi="reviews"
-        dense
         item-key="id"
         @editItem="editItem"
       />
@@ -46,16 +45,7 @@
 
       },
       computed:{
-        eTableFields:{
-          get(){
-            return  this.$store.getters['Access/getAllowedFields']('ReviewsTable');
-          },
-        },
-        eEditFields:{
-          get(){
-            return  this.$store.getters['Access/accessRules']('ReviewsEdit');
-          },
-        },
+
       },
       methods:{
         editItem(e, item){
