@@ -17,37 +17,13 @@
       </template>
 
     </v-data-table>
-    <e-table
-      urlApi="reviews"
-      dense
-      item-key="id"
-      @editItem="editItem"
-      :fields="eTableFields"
-      :refreshItems="refreshItems"
-      @refreshedItems="refreshItems=[]"
 
-    >
-      <template v-slot:top>
-        <!--          В top нужно добавить кнопку создания сущности и панель фильтрации-->
-        <v-btn
-          elevation="2"
-          raised
-          @click="editItem($event, {})"
-        >Новый отзыв</v-btn>
-        <v-text-field
-          v-model="search"
-          label="Search"
-          class="mx-4"
-        ></v-text-field>
-      </template>
-
-    </e-table>
   </div>
 
 </template>
 
 <script>
-  import ETable from "../../widgets/ETable/ETable";
+
 
   // import ECheckbox from "../ECheckbox/ECheckbox";
   // import store from '../../store'
@@ -61,10 +37,9 @@
   export default {
     name: "Table",
     components: {
-      'e-table' : ETable,
+
     },
     data: ()=>({
-      items:[],
       search:'',
       showEditDialog:false,
       currentEditItem : {},
@@ -75,6 +50,7 @@
     }),
 
     created() {
+      console.log('Reviews/init')
       this.$store.dispatch('Reviews/init');//инициализируем reviews из store
       this.$store.dispatch('Doctors/init');//инициализируем doctors из store
     },
@@ -89,12 +65,14 @@
         return  this.$store.getters['Access/getAllowedFields']('ReviewsTable');
       },
       totalCountItems() {
-        return this.$store.getters[this.storeName + "/getTotalCountItems"];
+        return this.$store.getters["Reviews/getTotalCountItems"];
       },
       getTableHeadItems(){
         return this.fields;
       },
-
+      items(){
+        return this.$store.getters["Reviews/getItems"];
+      },
 
     },
     methods:{
@@ -111,15 +89,15 @@
       dblclickRow(e,row){
         this.$emit('editItem', e, row.item)
       },
-      getItems(){
+      async getItems(){
         this.loading = true;
-        this.$store.dispatch(this.storeName + '/GET_ITEMS').then(() => {
-          this.loading = false;
-        });
+        await this.$store.dispatch('Reviews/GET_ITEMS');
+        this.loading = false;
       },
       setOptions(options){
-        this.$store.commit(this.storeName + '/SET_OPTIONS', options);
-        this.getItems();
+        console.log(options)
+        // this.$store.commit(this.storeName + 'Reviews/SET_OPTIONS', options);
+        // this.getItems();
       },
 
     },

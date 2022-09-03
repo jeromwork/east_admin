@@ -8,7 +8,6 @@
         @editItem="editItem"
       />
 
-
       <edit :toogle="showEditDialog"
               @close="showEditDialog=false"
               @save="savedItemUpdateDataTable"
@@ -25,7 +24,6 @@
 <script>
   import ReviewsTable from "./Table";
   import Edit from "./Edit";
-
   export default {
         name: "ReviewsData",
         components: {
@@ -45,7 +43,9 @@
 
       },
       computed:{
-
+        eEditFields(){
+          return  this.$store.getters['Access/accessRules']('ReviewsEdit');
+        },
       },
       methods:{
         editItem(e, item){

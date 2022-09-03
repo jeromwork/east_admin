@@ -4,13 +4,15 @@
 //items нужно получать с сервера
 
 import {getTypes, momentSave} from '@/store/api/Reviews'
+import storeQuery from '../../queryBuilders/Reviews/store'
+import apiQuery from '../../queryBuilders/Reviews/api'
 
 export default {
   namespaced:true,
 
   state: {
     component:'health', //компонент на сервере
-    specials:[],
+    reviews:[],
     limit: 10,
     offset:0,
     count:10,
@@ -18,17 +20,23 @@ export default {
     countOfPage:10,
     requestOptions:{page:1, itemsPerPage:10},
     reviewableTypes:[],
-    dataIsInit : false,
+    isInit:false,   //true singleton!!
+    storyQuery:{},
+    apiQuery:{},
   },
   mutations:{
-    DATA_IS_INIT(state){
-      state.dataIsInit = true;
+    INIT(state){
+      state.isInit = true;
+      state.storyQuery = storeQuery;
+      state.apiQuery = apiQuery;
     },
     FILL_REVIEWABLE_TYPES(state, types){
       state.reviewableTypes = types;
     },
-    FILL_SPECIALS(state, specials){
-      state.specials = specials;
+    FILL(state, reviews){
+      console.log(1999000)
+      console.log('FILL')
+      state.reviews = reviews;
     },
     SET_OPTIONS(state, options){
       console.log(options)
@@ -50,13 +58,13 @@ export default {
   },
   actions:{
     init({state}){
-      if(!state.dataIsInit){
-        console.log(this)
-
+        //однократно инициализируем store Reviews
+      if(!state.isInit){
+        this.commit('Reviews/INIT');
         this.dispatch('Reviews/getTypes');
-        this.commit('Reviews/DATA_IS_INIT');
-      }
+        this.dispatch('Reviews/getReviews');
 
+      }
     },
     async momentSave(store, data){
       if(!data.id){
@@ -67,10 +75,10 @@ export default {
       momentSave(this, id, data);
     },
 
-    async getReviews({state}){
-
+    async getReviews({state}, apiQuery){
+      console.log(apiQuery)
       let requestData = {
-        action:  'specials/getVue',
+        action:  'reviews',
         component:state.component,
         limit:state.requestOptions.itemsPerPage,
         offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
@@ -78,17 +86,17 @@ export default {
       };
 
 
-      this.$http.post(this.$http.CONNECTOR_URL, requestData )
-        .then(response => {this.info = response
-          if(!response.data || !response.data.items || !response.data.count)
-          {
-            console.log('Проверьте структуру данных Специальностей');
-            return;
-          }
+       let response = await this.$http.get('http://127.0.0.1:8000/api/reviews', requestData );
 
-          this.commit('SpecialsSettings/FILL_SPECIALS', response.data.items);
-          this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
-        });
+      if(!response.data || !response.data.items || !response.data.count)
+      {
+        console.log('Проверьте структуру данных Специальностей');
+        return;
+      }
+      console.log(44444)
+      this.commit('Reviews/FILL', response.data.items);
+      this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
+
     },
     async getTypes(){
       getTypes(this);
@@ -101,6 +109,9 @@ export default {
     },
     getReviewableTypes : (state) => {
       return state.reviewableTypes;
+    },
+    getItems : (state) => {
+      return state.reviews;
     }
 
   },
