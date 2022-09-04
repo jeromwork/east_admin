@@ -66,8 +66,8 @@
           v-if="header.render && header.render == 'actions'"
           :key="header.value"
           v-bind="header.props"
-          :item="item"
-          :urlApi="urlApi"
+          :id="item.id"
+          :store-name="storeName"
           @removedItem="uploadItems()"
         />
 

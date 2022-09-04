@@ -37,10 +37,11 @@
       }),
       methods:{
         setRating(val){
-          if(this.momentSave && this.dispatchStore.momentSave && this.itemId && this.field){
-            let data = {id:this.itemId};
-            data[this.field] = val;
-            this.$store.dispatch(this.dispatchStore.momentSave, data, 33333);
+          if(this.momentSave && this.dispatchStore.momentSave && this.itemId && this.field && this.dispatchStore.saveQuery){
+
+            let saveQuery = this.$store.getters[this.dispatchStore.saveQuery];
+            console.log(saveQuery.forItemWithId(this.itemId).setField(this.field, val))
+            this.$store.dispatch(this.dispatchStore.momentSave, saveQuery);
           }
         },
       },

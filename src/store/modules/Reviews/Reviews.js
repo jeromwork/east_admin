@@ -5,7 +5,8 @@
 
 import apiReviews from '@/store/api/Reviews'
 import storeQuery from '../../queryBuilders/Reviews/store'
-import getReviewsQuery from '../../queryBuilders/Reviews/api'
+import getQuery from '../../queryBuilders/Reviews/get'
+import saveQuery from '../../queryBuilders/Reviews/save'
 
 export default {
   namespaced:true,
@@ -22,13 +23,11 @@ export default {
     reviewableTypes:[],
     isInit:false,   //true singleton!!
     storyQuery:{},
-    getReviewsQuery:{},
   },
   mutations:{
     INIT(state){
       state.isInit = true;
       state.storyQuery = storeQuery;
-      state.getReviewsQuery = getReviewsQuery;
     },
     FILL_REVIEWABLE_TYPES(state, types){
       state.reviewableTypes = types;
@@ -65,21 +64,20 @@ export default {
       }
     },
 
-    async momentSave(store, data){
-      console.log('momentSave')
-      if(!data.id){
+    async momentSave(store, saveQuery){
+      console.log(saveQuery)
+      if(!saveQuery.id){
         console.log('Не передан id')
       }
-      let id = data.id;
-      delete data.id;
-      let response = await apiReviews.momentSave(this, id, data);
+
+      let response = await apiReviews.momentSave(this, saveQuery.id, saveQuery.data);
       if(response.data.data){
         store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
       }
     },
 
-    async getReviews(store, getReviewsQuery){
-      let response = await apiReviews.getReviews(this, getReviewsQuery);
+    async getReviews(store, getQuery){
+      let response = await apiReviews.getReviews(this, getQuery);
 
       if(!response.data || !response.data.items || !response.data.count)
       {
@@ -93,9 +91,10 @@ export default {
     },
 
     async getTypes(store){
+      console.log(store)
       let response = await apiReviews.getTypes(this);
       if(response.data.data){
-        store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
+        this.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
       }
     },
 
@@ -112,7 +111,11 @@ export default {
     },
     getTotalCountItems : state => {
       return state.count;
-    }
+    },
+    saveQuery : () => ({...saveQuery}),
+
+    getQuery: () => ({...getQuery})
+
 
   },
 

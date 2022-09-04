@@ -36,14 +36,7 @@
               id:Number,
               required:true,
             },
-          id:{},
-
           field:{type:String, required: true},
-          serverSettings:{
-            component : {type:String, required: true},
-            item: {type:String, required: true},
-            action:{type:String, required: true },
-          },
           storeName:{type:String, required: true},
 
           label : String,

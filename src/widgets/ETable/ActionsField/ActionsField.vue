@@ -1,22 +1,22 @@
 <template>
 <div>
-<!--  <delete-item-->
-<!--  v-if="deleteItem"-->
-<!--  @removedItem="removedItem"-->
-<!--  :storeName="storeName"-->
-<!--  :item-id="id"-->
-<!--  />-->
+  <delete-item
+  v-if="deleteItem"
+  @removedItem="removedItem"
+  :storeName="storeName"
+  :item-id="id"
+  />
 
 
   </div>
 </template>
 
 <script>
-  //import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
+  import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
     export default {
         name: "ActionsField",
       components:{
-        //'delete-item' : DeleteItem,
+        'delete-item' : DeleteItem,
       },
       props:{
         id:{
