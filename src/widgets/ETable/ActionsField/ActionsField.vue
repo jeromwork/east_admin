@@ -6,21 +6,7 @@
 <!--  :storeName="storeName"-->
 <!--  :item-id="id"-->
 <!--  />-->
-  <template v-slot:item.actions="{ item }">
-    <v-icon
-      small
-      class="mr-2"
-      @click="editItem(item)"
-    >
-      mdi-pencil
-    </v-icon>
-    <v-icon
-      small
-      @click="deleteItem(item)"
-    >
-      mdi-delete
-    </v-icon>
-  </template>
+
 
   </div>
 </template>
@@ -34,9 +20,9 @@
       },
       props:{
         id:{
-            type:Number,
-            required:true,
-          },
+          type:Number,
+          required:true,
+        },
         storeName:{
           type:String,
           required:true,

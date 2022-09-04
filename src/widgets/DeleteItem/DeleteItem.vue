@@ -12,28 +12,24 @@
 
           <v-tooltip bottom
                      internal-activator
-          :value="confirmDialog"
+                     :value="confirmDialog"
           >
             <template #activator="{ on: tooltip }">
-              <v-icon
-                small
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
                 v-on="{ ...tooltip, ...dialog }"
+                elevation="2"
+                icon
+                outlined
+
               >
-                mdi-delete
-              </v-icon>
-          <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="{ ...tooltip, ...dialog }"
-            elevation="2"
-            icon
-            outlined
-
-          >
-
-          </v-btn>
-              </template>
+                <v-icon dark>
+                  mdi-delete-forever
+                </v-icon>
+              </v-btn>
+            </template>
             <span>Удаление</span>
           </v-tooltip>
         </template>
@@ -68,46 +64,46 @@
 
 <script>
   //todo При клике на кнопку, появляется диалоговое окно, и после закрытия, не убирается подсветка кнопки и tooltip
-    export default {
-        name: "DeleteItem",
-      props:{
-        itemId:{
-          type:Number,
-          required:true,
-        },
-        urlApi:{
-          type:String,
-          required:true,
-        },
+  export default {
+    name: "DeleteItem",
+    props:{
+      id:{
+        type:Number,
+        required:true,
       },
-      data:() =>({
-        confirmDialog : false,
-        dialog:false,
-      }),
-      methods:{
-        removeItem(){
+      urlApi:{
+        type:String,
+        required:true,
+      },
+    },
+    data:() =>({
+      confirmDialog : false,
+      dialog:false,
+    }),
+    methods:{
+      removeItem(){
 
-          this.confirmDialog = false;
-          this.$http.delete('api/' + this.urlApi + '/' + this.itemId)
-            .then(response => {
-              this.handRequestFromServer(response);
-            });
-        },
-        handRequestFromServer(response){
-          //todo сделать вывод success & error
-          if(response.data && response.data.ok){
-            this.lastMessageFromServer = 'Сохранение прошло успешно!';
-            if(this.itemId){
-              this.$emit('removedItem', this.itemId);
-            }
-
-          }else{
-            console.log('Ошибка сохранения сущности')
+        this.confirmDialog = false;
+        this.$http.delete('api/' + this.urlApi + '/' + this.itemId)
+          .then(response => {
+            this.handRequestFromServer(response);
+          });
+      },
+      handRequestFromServer(response){
+        //todo сделать вывод success & error
+        if(response.data && response.data.ok){
+          this.lastMessageFromServer = 'Сохранение прошло успешно!';
+          if(this.itemId){
+            this.$emit('removedItem', this.itemId);
           }
-        },
 
+        }else{
+          console.log('Ошибка сохранения сущности')
+        }
       },
-    }
+
+    },
+  }
 </script>
 
 <style scoped>
