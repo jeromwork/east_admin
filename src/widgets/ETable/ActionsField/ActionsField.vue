@@ -1,34 +1,52 @@
 <template>
 <div>
-  <delete-item
-  v-if="actionDelete"
-  @removedItem="removedItem"
-  :urlApi="urlApi"
-  :item-id="item.id"
-  />
-
+<!--  <delete-item-->
+<!--  v-if="deleteItem"-->
+<!--  @removedItem="removedItem"-->
+<!--  :storeName="storeName"-->
+<!--  :item-id="id"-->
+<!--  />-->
+  <template v-slot:item.actions="{ item }">
+    <v-icon
+      small
+      class="mr-2"
+      @click="editItem(item)"
+    >
+      mdi-pencil
+    </v-icon>
+    <v-icon
+      small
+      @click="deleteItem(item)"
+    >
+      mdi-delete
+    </v-icon>
+  </template>
 
   </div>
 </template>
 
 <script>
-  import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
+  //import DeleteItem from '@/widgets/DeleteItem/DeleteItem';
     export default {
         name: "ActionsField",
       components:{
-        'delete-item' : DeleteItem,
+        //'delete-item' : DeleteItem,
       },
       props:{
-          item:{
-            type:Object,
+        id:{
+            type:Number,
             required:true,
           },
-        urlApi:{
+        storeName:{
           type:String,
           required:true,
         },
-        actions:{type:String,
-          required:false,}
+        actions:{type:Array,
+          required:false,},
+        deleteItem:{
+          type:Boolean,
+          default:false,
+        },
       },
       data : () => ({
 
@@ -37,10 +55,6 @@
 
       },
       computed:{
-        actionDelete(){
-          // console.log(this)
-          return (this.actions?.indexOf('delete') > -1)
-        },
         actionPublication(){
           return (this.actions?.indexOf('publication') > -1)
         },

@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <v-data-table
       dense
       :headers="tableFields"
@@ -16,8 +17,29 @@
         <slot :name="slotName" v-bind="slotScope"></slot>
       </template>
 
-    </v-data-table>
+      <template v-slot:item.reviewable_id="{ item }" >
+        <v-chip
+          :color="getColor(item.reviewable_id)"
+          dark
+        >
+          {{ item.reviewable_id }}
+        </v-chip>
+      </template>
 
+
+      <template v-slot:tableFields.actions="{ item }" >
+        <actions-field
+          :id="item.id"
+          storeName="Reviews"
+          deleteItem
+          @removedItem="uploadItems()"
+        />
+      </template>
+
+
+
+    </v-data-table>
+    {{tableFields}}
   </div>
 
 </template>
@@ -30,14 +52,14 @@
   // import MultiTags from "../../widgets/MultiTags/MultiTags";
   // import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
   // import Textarea from "@/widgets/Textarea/Textarea"
-  // import ActionsField from "@/widgets/ETable/ActionsField/ActionsField"
+  import ActionsField from "@/widgets/ETable/ActionsField/ActionsField"
   // import Rating from "@/widgets/Rating/Rating"
   // import ESelect from "@/widgets/ESelect/ESelect";
 
   export default {
     name: "Table",
     components: {
-
+      ActionsField
     },
     data: ()=>({
       search:'',
@@ -76,6 +98,11 @@
 
     },
     methods:{
+      getColor (calories) {
+        if (calories > 100) return 'red'
+        else if (calories > 50) return 'orange'
+        else return 'green'
+      },
       editItem(e, item){
         this.showEditDialog = true
         this.currentEditItem = item;
@@ -99,7 +126,9 @@
         // this.$store.commit(this.storeName + 'Reviews/SET_OPTIONS', options);
         // this.getItems();
       },
-
+      uploadItems(){
+        this.$store.dispatch('Reviews/GET_ITEMS');
+      },
     },
 
 

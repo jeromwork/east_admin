@@ -15,6 +15,12 @@
           :value="confirmDialog"
           >
             <template #activator="{ on: tooltip }">
+              <v-icon
+                small
+                v-on="{ ...tooltip, ...dialog }"
+              >
+                mdi-delete
+              </v-icon>
           <v-btn
             color="primary"
             dark
@@ -25,9 +31,7 @@
             outlined
 
           >
-            <v-icon dark>
-              mdi-delete-forever
-            </v-icon>
+
           </v-btn>
               </template>
             <span>Удаление</span>
