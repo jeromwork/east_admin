@@ -2,19 +2,40 @@
   <v-container fluid>
     <v-card>
       <!--Компоненту e-table передается только url а дальше он уже сам работает с сервером-->
-      <reviews-table
-        urlApi="reviews"
+      <e-table
+        store-name="Reviews"
+        dense
         item-key="id"
         @editItem="editItem"
-      />
+        :fields="eTableFields"
+        :refreshItems="refreshItems"
+        @refreshedItems="refreshItems=[]"
+
+      >
+        <template v-slot:top>
+          <!--          В top нужно добавить кнопку создания сущности и панель фильтрации-->
+          <v-btn
+            elevation="2"
+            raised
+            @click="editItem($event, {})"
+          >Новый отзыв</v-btn>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            class="mx-4"
+          ></v-text-field>
+        </template>
+
+      </e-table>
 
       <edit :toogle="showEditDialog"
-              @close="showEditDialog=false"
-              @save="savedItemUpdateDataTable"
-              :fields="eEditFields"
-              :item="currentEditItem"
-              urlApi="reviews"
-      />
+            @close="showEditDialog=false"
+            @save="savedItemUpdateDataTable"
+            :fields="eEditFields"
+            :item="currentEditItem"
+            urlApi="reviews"
+      >
+      </edit>
 
     </v-card>
   </v-container>
@@ -22,46 +43,51 @@
 </template>
 
 <script>
-  import ReviewsTable from "./Table";
+  import ETable from "../../widgets/ETable/ETable";
   import Edit from "./Edit";
+
   export default {
-        name: "ReviewsData",
-        components: {
-          'edit' : Edit,
-          ReviewsTable,
-        },
-        data: ()=>({
-            items:{},
-          search:'',
-          calories:'',
-            showEditDialog:false,
-            currentEditItem : {},
-          refreshItems:[],
-        }),
+    name: "ReviewsData",
+    components: {
+      'edit' : Edit,
+      'e-table' : ETable,
+    },
+    data: ()=>({
+      items:{},
+      search:'',
+      calories:'',
+      showEditDialog:false,
+      currentEditItem : {},
+      refreshItems:[],
+    }),
 
-      created() {
-
+    created() {
+      this.$store.dispatch('Reviews/init');//инициализируем reviews из store
+      this.$store.dispatch('Doctors/init');//инициализируем doctors из store
+    },
+    computed:{
+      eTableFields(){
+        return  this.$store.getters['Access/getAllowedFields']('ReviewsTable');
       },
-      computed:{
-        eEditFields(){
-          return  this.$store.getters['Access/accessRules']('ReviewsEdit');
-        },
+      eEditFields(){
+        return  this.$store.getters['Access/accessRules']('ReviewsEdit');
       },
-      methods:{
-        editItem(e, item){
-          this.showEditDialog = true
-          this.currentEditItem = item;
-        },
-        savedItemUpdateDataTable(id){
-          //this.showEditDialog=false;
-           console.log(id)
-          //после сохранения сущности, обновляем с сервера только одну эту сущность
-          this.refreshItems = [id];
-        },
+    },
+    methods:{
+      editItem(e, item){
+        this.showEditDialog = true
+        this.currentEditItem = item;
       },
+      savedItemUpdateDataTable(id){
+        //this.showEditDialog=false;
+        console.log(id)
+        //после сохранения сущности, обновляем с сервера только одну эту сущность
+        this.refreshItems = [id];
+      },
+    },
 
 
-    }
+  }
 </script>
 
 <style scoped>

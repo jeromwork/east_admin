@@ -18,13 +18,12 @@
       </template>
 
 
-
-
       <template
               v-for="header in getTableHeadItemsNeedRender"
               v-slot:[`item.${header.value}`]="{ item }"
 
       >
+
         <multi-tags
                 v-if="header.render.type == 'multiTags'"
                 v-model="item[header.serverSettings.itemsName]"
@@ -44,16 +43,16 @@
                 :serverSettings="header.serverSettings"
         ></e-checkbox>
 
-
         <TextFieldAutoSave
                 v-if="header.render && header.render.type == 'text'"
                 :key="header.value"
-                :url="urlApi"
+                :store-name="storeName"
                 :field="header.value"
                 :item="item"
                 :label="header.render.label"
 
         />
+
         <e-textarea
           v-if="header.render && header.render == 'textarea'"
           :key="header.value"
@@ -62,6 +61,7 @@
           :itemId="item.id"
           :field="header.value"
         />
+
         <actions-field
           v-if="header.render && header.render == 'actions'"
           :key="header.value"
@@ -70,6 +70,7 @@
           :urlApi="urlApi"
           @removedItem="uploadItems()"
         />
+
         <e-select
           v-if="header.render && header.render == 'select'"
           :key="header.value"
@@ -79,6 +80,7 @@
           :itemId="item.id"
         >
         </e-select>
+
         <rating
           v-if="header.render && header.render == 'rating'"
           :key="header.value"
@@ -87,6 +89,7 @@
           v-model="item[header.value]"
           :field="header.value"
         />
+
       </template>
 
     </v-data-table>
@@ -97,8 +100,8 @@
 
 <script>
     import ECheckbox from "../ECheckbox/ECheckbox";
-    import store from '../../store'
-    import ETable from '../../store/modules/ETable/ETable'
+    // import store from '../../store'
+    // import ETable from '../../store/modules/ETable/ETable'
     import MultiTags from "../../widgets/MultiTags/MultiTags";
     import TextFieldAutoSave from "../TextFieldAutoSave/TextFieldAutoSave";
     import Textarea from "@/widgets/Textarea/Textarea"
@@ -129,9 +132,7 @@
             action:String,
 
           },
-          urlApi:{
-            type:String
-          },
+          storeName:{type:String, required: true},
           itemKey:{
             type:String,
           },
@@ -139,39 +140,23 @@
           refreshItems:{type:Array},
 
         },
-        data: function () {return {
-          storeName: '',
+        data: () => ({
           calories:'',
           search:'',
           loading:false,
-        };},
+        }),
       created() {
-        this.initStoreModule();
+        this.$store.dispatch(this.storeName + '/INIT')
       },
       methods: {
         uploadItems(){
-          this.$store.dispatch(this.storeName + '/GET_ITEMS');
-        },
-        initStoreModule(){
-          //при запуске компонента, создается новый vuex модуль, с уникальным именем
-          //соответственно мутации и комиты будут через это уникальное имя модуля
-          this.storeName = `ETable_${this.urlApi}`;
-          store.registerModule(this.storeName, {
-            ...ETable,
-            component:'specials',
-            namespaced: true,
-          });
-          this.$store.commit(this.storeName + '/SET_ETABLE_OPTIONS', {
-            urlApi:this.urlApi,
-            storeName:this.storeName,
-          });
-
+          //this.$store.dispatch(this.storeName + '/GET_ITEMS');
         },
         getItems(){
-          this.loading = true;
-          this.$store.dispatch(this.storeName + '/GET_ITEMS').then(() => {
-              this.loading = false;
-          });
+          // this.loading = true;
+          // this.$store.dispatch(this.storeName + '/GET_ITEMS').then(() => {
+          //     this.loading = false;
+          // });
         },
         setOptions(options){
           this.$store.commit(this.storeName + '/SET_OPTIONS', options);
@@ -185,54 +170,40 @@
       computed:{
 
 
-        items:{
-          get(){
-            return this.$store.getters[this.storeName + "/getItems"];
-          },
+        items(){
+          return this.$store.getters[this.storeName + "/getItems"];
         },
-        getTableHeadItems:{
-          get(){
-            return this.fields;
-            //return this.$store.getters[this.storeName + "/getTableHeadItems"];
-          },
+        getTableHeadItems(){
+          return this.fields;
+          //return this.$store.getters[this.storeName + "/getTableHeadItems"];
         },
-        getTableHeadItemsRenderCheckbox:{
-          get(){
-            let headers = this._.filter(this.getTableHeadItems, function(h) {
-              return h.renderCheckbox; });
-            //console.log(headers)
-            return headers;
-          },
+        getTableHeadItemsRenderCheckbox(){
+          let headers = this._.filter(this.getTableHeadItems, function(h) {
+            return h.renderCheckbox; });
+          //console.log(headers)
+          return headers;
         },
-        getTableHeadItemsRenderMultiTags:{
-          get(){
+        getTableHeadItemsRenderMultiTags(){
 
-            let headers = this._.filter(this.getTableHeadItems, function(h) {
-              return h.renderMultiTags; });
-            //console.log(headers)
-            return headers;
-          },
+          let headers = this._.filter(this.getTableHeadItems, function(h) {
+            return h.renderMultiTags; });
+          //console.log(headers)
+          return headers;
         },
-        getTableHeadItemsNeedRender:{
-          get(){
-            let headers = this._.filter(this.getTableHeadItems, function(h) {
-              return h.render; });
-            console.log(headers)
-            return headers;
-          },
+        getTableHeadItemsNeedRender(){
+          let headers = this._.filter(this.getTableHeadItems, function(h) {
+            return h.render; });
+          console.log(headers)
+          return headers;
         },
-        totalCountItems:{
-          get(){
-            return this.$store.getters[this.storeName + "/getTotalCountItems"];
-          },
+        totalCountItems(){
+          return this.$store.getters[this.storeName + "/getTotalCountItems"];
         },
-        refreshedItems:{
-          get(){
-            if(this.$store.getters[this.storeName + "/getRefreshedItems"].length === 0){
-              this.$emit('refreshedItems');
-            }
-            return this.$store.getters[this.storeName + "/getRefreshedItems"];
-          },
+        refreshedItems(){
+          if(this.$store.getters[this.storeName + "/getRefreshedItems"].length === 0){
+            this.$emit('refreshedItems');
+          }
+          return this.$store.getters[this.storeName + "/getRefreshedItems"];
         },
 
 

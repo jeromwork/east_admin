@@ -44,7 +44,7 @@
             item: {type:String, required: true},
             action:{type:String, required: true },
           },
-          url:String,
+          storeName:{type:String, required: true},
 
           label : String,
 
@@ -57,34 +57,18 @@
 
 
       methods:{
-          saveData(value){
-            console.log(value)
-            console.log(this)
-
-            console.log(this.item)
+          async saveData(value){
+            let data = {};
+            data[this.field] = value;
             if(!this.item.id){
               throw new Error('Отсутсвует id для сущности. Невозможно сохранить данные')
             }
+            //сохраняем данные item через store
+            await this.$store.dispatch(this.dispatchStore.momentSave, data);
+            //ждем сохранения и оповещаем родителя о редактировании item
+            this.$emit('momentSave',  this.item)
+            //если store удачно сохранил или были ошибки, то это его забота оповестить пользователя
 
-            let data = {};
-            data[this.field] = value;
-            // let requestData = {
-            //   //id:this.item.id,
-            //   data,
-            // };
-            this.$http.put('api/' + this.url + '/' + this.item.id, {...data} )
-                    .then(response => {
-                      console.log(response)
-                      this.alertText = 'Сохранено!';
-                      this.alert = true;
-                    }).catch(
-//todo сделать вывод ошибок и подтверждение сохранения
-               (error) => {
-                this.alertText = error;
-                this.alert = true;
-                console.log(error)
-              }
-            );
           }
       },
       created() {

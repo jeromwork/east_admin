@@ -1,24 +1,33 @@
-export async function getTypes(store){
+export default {
+  async getTypes(store){
+    return store.$http.get('api/reviews/reviewable-type');
+  },
 
-  store.$http.get('api/reviews/reviewable-type')
-    .then(response => {
-      console.log(response.data);
-      if(response.data.data){
-        store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
-      }
 
-    }).catch(error => console.log(error+'error'));
+  async momentSave(store, id, data){
+    return await store.$http.put('api/reviews/'+id, data);
+  },
+
+
+  async getReviews(store, getReviewsQuery){
+
+    console.log(30)
+    console.log(getReviewsQuery)
+    console.log(store)
+    let requestData = {};
+    if(getReviewsQuery){
+      requestData = {};
+    }
+    // let requestData = {
+    //   component:state.component,
+    //   limit:state.requestOptions.itemsPerPage,
+    //   offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
+    //   requestOptions:state.requestOptions,
+    // };
+
+
+    return await store.$http.get('api/reviews', requestData );
+
+  },
+
 }
-export async function momentSave(store, id, data){
-
-  store.$http.put('api/reviews/'+id, data)
-    .then(response => {
-      console.log(response.data);
-      if(response.data.data){
-        store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
-      }
-
-    }).catch(error => console.log(error+'error'));
-}
-
-

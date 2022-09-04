@@ -3,9 +3,9 @@
 //так же еще будут настройки какие поля отображать (потом можно будет вынести эти настройки в одтельный компонент)
 //items нужно получать с сервера
 
-import {getTypes, momentSave} from '@/store/api/Reviews'
+import apiReviews from '@/store/api/Reviews'
 import storeQuery from '../../queryBuilders/Reviews/store'
-import apiQuery from '../../queryBuilders/Reviews/api'
+import getReviewsQuery from '../../queryBuilders/Reviews/api'
 
 export default {
   namespaced:true,
@@ -22,20 +22,18 @@ export default {
     reviewableTypes:[],
     isInit:false,   //true singleton!!
     storyQuery:{},
-    apiQuery:{},
+    getReviewsQuery:{},
   },
   mutations:{
     INIT(state){
       state.isInit = true;
       state.storyQuery = storeQuery;
-      state.apiQuery = apiQuery;
+      state.getReviewsQuery = getReviewsQuery;
     },
     FILL_REVIEWABLE_TYPES(state, types){
       state.reviewableTypes = types;
     },
     FILL(state, reviews){
-      console.log(1999000)
-      console.log('FILL')
       state.reviews = reviews;
     },
     SET_OPTIONS(state, options){
@@ -66,31 +64,26 @@ export default {
 
       }
     },
+
     async momentSave(store, data){
+      console.log('momentSave')
       if(!data.id){
         console.log('Не передан id')
       }
       let id = data.id;
       delete data.id;
-      momentSave(this, id, data);
+      let response = await apiReviews.momentSave(this, id, data);
+      if(response.data.data){
+        store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
+      }
     },
 
-    async getReviews({state}, apiQuery){
-      console.log(apiQuery)
-      let requestData = {
-        action:  'reviews',
-        component:state.component,
-        limit:state.requestOptions.itemsPerPage,
-        offset: (state.requestOptions.page * state.requestOptions.itemsPerPage) - state.requestOptions.itemsPerPage,
-        requestOptions:state.requestOptions,
-      };
-
-
-       let response = await this.$http.get('http://127.0.0.1:8000/api/reviews', requestData );
+    async getReviews(store, getReviewsQuery){
+      let response = await apiReviews.getReviews(this, getReviewsQuery);
 
       if(!response.data || !response.data.items || !response.data.count)
       {
-        console.log('Проверьте структуру данных Специальностей');
+        console.log('Проверьте структуру данных отзывов');
         return;
       }
       console.log(44444)
@@ -98,8 +91,12 @@ export default {
       this.commit('SpecialsSettings/SET_TOTAL_COUNT_SPECIALS', response.data.count);
 
     },
-    async getTypes(){
-      getTypes(this);
+
+    async getTypes(store){
+      let response = await apiReviews.getTypes(this);
+      if(response.data.data){
+        store.commit('Reviews/FILL_REVIEWABLE_TYPES', response.data.data);
+      }
     },
 
   },
@@ -112,6 +109,9 @@ export default {
     },
     getItems : (state) => {
       return state.reviews;
+    },
+    getTotalCountItems : state => {
+      return state.count;
     }
 
   },
